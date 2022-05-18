@@ -1,36 +1,69 @@
-const Contenedor = require("./classConstructor")
-const express = require("express");
+const express = require('express');
 const app = express();
+let Contenedor = require ("./classConstructor")
 
 const products = new Contenedor ("products.txt");
+products.prevContent();
 
-async function randomProduct () {
-    try{   
-        const allProducts = await products.getAll()
-        const randomId = Math.floor(Math.random() * allProducts.length+1);
-        return (allProducts.find(prod => prod.id === randomId))
-    } catch (err) {
-        console.error(err)
-    }
-}
+const routerProducts = express.Router();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/",(req,res) => {
-    res.send('<a href="/productos"> Productos</a> <br> <a href="/productoRandom"> Producto Random</a>')
-})
+app.use(express.static("public"))
 
-app.get("/productos",(req,res) => {
-    products.getAll().then((products) => {
-        res.send(products)
-    }) 
-})
-
-app.get("/productoRandom", (req,res) => {
-    randomProduct().then((product) => {
-        res.send(product)
+routerProducts.get('/',(req,res) => {
+    products.getAll().then(allproducts => {
+        res.send(allproducts)
     })
 })
 
-app.listen(8080,() => {
-    console.log("Servidor levantado");
+routerProducts.get('/:idNumber',(req,res) => {
+    const idProduct = parseInt(req.params.idNumber)
+    products.getById(idProduct)
+    .then((productFound) => {
+        if (!productFound) res.status(404).send({error:"producto no encontrado"})
+        else res.json(productFound)
+    })
+})
+
+routerProducts.post('/',(req,res) => {
+    const productToAdd = {
+        title:req.body.title,
+        price:parseInt(req.body.price),
+        thumbnail:req.body.thumbnail
+    }
+    if (productToAdd === undefined){res.status(400).send({error: "product no puede ser 'undefined'"})}
+    else{
+        products.save(productToAdd)
+        .then((productAdded) => {
+            res.json({
+                productAdded:productAdded,
+                id:productAdded.id
+            })
+        })
+    }
+})
+
+routerProducts.put('/:idNumber',(req,res) => {
+    const idProduct = parseInt(req.params.idNumber);
+    const productUpdate = req.body.productUpdate;
+    if (productUpdate === undefined){res.status(400).send({error: "productUpdate no puede ser 'undefined'"})}
+    else {
+        products.modifyProduct(idProduct,productUpdate)
+        .then(promise => res.send(promise));
+    }
+})
+
+routerProducts.delete('/:idNumber',(req,res) => {
+    const idProduct = parseInt(req.params.idNumber);
+    products.deleteById(idProduct)
+    .then(() => res.send('Producto eliminado correctamente'))
+})
+
+app.use('/api/productos', routerProducts);
+
+
+app.listen(8080, () => {
+    console.log('Estoy escuchando!');
 })

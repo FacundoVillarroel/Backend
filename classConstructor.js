@@ -1,10 +1,11 @@
+const { error } = require("console");
 const fs = require ("fs")
 
 class Contenedor {
     static contadorId = 1
 
     constructor(fileName){
-        this.fileName=fileName;
+        this.fileName="./public/"+fileName;
         this.arrayProducts= []
     }
 
@@ -28,7 +29,7 @@ class Contenedor {
         try{
             await fs.promises.writeFile(this.fileName,JSON.stringify(this.arrayProducts,null,2));
             console.log("Producto Agregado");
-            return(item.id)
+            return(item)
         }
         catch (err) {
             console.log("Error en escritura;",err);
@@ -38,7 +39,7 @@ class Contenedor {
     async getById(idNumber){   
         try{
             const contenido = JSON.parse(await fs.promises.readFile(this.fileName,"utf-8"))
-            let productFound = contenido.find((prop) => prop.id === idNumber)
+            let productFound = contenido.find((prod) => prod.id === idNumber)
             if (productFound === undefined){
                 productFound = null
             }
@@ -56,6 +57,18 @@ class Contenedor {
         }
         catch(err){
             console.log("Error en la obtención de productos",err);
+        }
+    }
+
+    async modifyProduct(idNumber,productUpdate) {
+        try{
+            const productIndex = this.arrayProducts.findIndex((product) => product.id === idNumber)
+            this.arrayProducts.splice(productIndex,1,productUpdate)
+            await fs.promises.writeFile(this.fileName,JSON.stringify(this.arrayProducts,null,2));
+            return ("producto actualizado correctamente")
+        }
+        catch(err){
+            return new error("Error en la actualización del producto",err);
         }
     }
 
