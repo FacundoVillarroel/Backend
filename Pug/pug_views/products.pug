@@ -1,0 +1,21 @@
+link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
+h1.my-5.text-center Vista de productos
+table.d-flex.flex-column
+    thead
+        tr.d-flex.justify-content-between
+            th(style='margin-bottom: 20px; width:33.3%') Producto
+            th(style='margin-bottom: 20px; width:33.3%') Precio
+            th(style='margin-bottom: 20px; width:33.3%') Imagen
+    tbody
+        if empty 
+            tr.d-flex.justify-content-between
+                td No hay productos en la lista
+        else 
+            each product in products
+                tr.d-flex.justify-content-between
+                    td(style='margin-bottom: 20px; width:33.3%') #{product.title}
+                    td(style='margin-bottom: 20px; width:33.3%') #{product.price}
+                    td(style='margin-bottom: 20px; width:33.3%')
+                        img(src=`${product.thumbnail}}`, alt=`${product.title}`, height='150', width='200')
+                tr
+a.btn.btn-primary(href='/') Ir al formulario
