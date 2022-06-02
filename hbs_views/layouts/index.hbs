@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="./styles.css">
+        <script defer src="/socket.io/socket.io.js"></script>
+        <script defer src="main.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="container main">
+            <h1 class="title">Ingrese producto</h1>
+            <form onsubmit="return sendProduct()" class="my-5 d-flex flex-column">
+                <label for="title"><strong>Nombre:</strong></label>
+                <input type="text" id="title" name="title" required class="mb-4">
+                <label for="price"><strong>Precio:</strong></label>
+                <input type="number" id="price" name="price" required class="mb-4">
+                <label for="thumbnail"><strong>Foto URL:</strong></label>
+                <input type="text" id="thumbnail" name="thumbnail" required class="mb-4">
+                <button type="submit" class="btn btn-success">Enviar</button>
+            </form>
+            {{{body}}}
+            <a href="/" class="btn btn-primary my-3">Ir a home</a>
+        </div>
+        
+    </body>
+</html>

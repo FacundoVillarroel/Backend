@@ -1,0 +1,16 @@
+
+{{#if products}}
+    <table class="d-flex flex-column">
+        <thead>
+            <tr class="d-flex justify-content-between">
+                <th style="margin-bottom: 20px; width:33.3%">Producto</th>
+                <th style="margin-bottom: 20px; width:33.3%">Precio</th>
+                <th style="margin-bottom: 20px; width:33.3%">Imagen</th>
+            </tr>
+        </thead>
+        <tbody id="productContainer">                               
+        </tbody>
+    </table>
+{{else}}
+    <h2>No hay productos en la lista</h2>
+{{/if}}
