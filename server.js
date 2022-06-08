@@ -1,90 +1,125 @@
-const express = require ("express");
-const fs = require ("fs")
-const { engine } = require ("express-handlebars");
-const {Server: HTTPServer} = require ("http");
-const {Server: IOServer} = require ("socket.io");
-let Contenedor = require ("./classConstructor")
+const express = require("express");
+const Contenedor = require("./contenedor");
+const loginCheck = require("./middlewares/loginCheck")
+const validationCheck = require("./middlewares/validationCheck")
 
-const productsList = new Contenedor ("products.txt");
-productsList.prevContent();
+const products = new Contenedor ("products.txt")
+const carts = new Contenedor ("carts.txt");
 
-const app = express ();
+products.loadPrevContent();
+carts.loadPrevContent();
+
+const app = express();
 app.use(express.static("public"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.engine (
-    "hbs",
-    engine({
-        extname:".hbs",
-        defaultLayout:"index.hbs",
-    })
-)
+const routerProducts = express.Router();
+const routerCart = express.Router();
 
-app.set("views","./hbs_views");
-app.set("view engine", "hbs");
-
-const httpServer = new HTTPServer (app);
-const io = new IOServer (httpServer);
-
-// functions to write and read files
-
-const writeFile = async (fileName, array) => {
-    try {
-        await fs.promises.writeFile(`${fileName}`, JSON.stringify(array))
-    } catch {
-        throw new Error('Problem with the writing of the file')
+routerProducts.get("/:idNumber?", loginCheck, async (req,res) => {
+    const idProduct = parseInt(req.params.idNumber)
+    if (!idProduct){
+        const productsList = await products.getAll()
+        res.send(productsList)
     }
-}
-
-const readFile = async (fileName) => {
-    try {        
-        const itExists = fs.existsSync(fileName)
-        if(itExists) {
-            return JSON.parse(await fs.promises.readFile(fileName));
-        } else {
-            return []
-        }
-    } catch {
-        throw new Error('Problem with getting the array out of the file')
+    else {
+        const product = await products.getById(idProduct) 
+        res.send( product )
     }
-}
-
-let messages = []
-// Socket Connections
-
-io.on("connection", async (socket) => {
-    messages = await readFile("./public/messages.txt")
-    socket.emit("messages", messages);
-    socket.emit("products", await productsList.getAll());
-    
-    socket.on("new_message",(message) => {
-        console.log("1",messages);
-        messages.push(message);
-        console.log("2",messages);
-        writeFile('./public/messages.txt', messages)
-        console.log("3",messages);
-        io.sockets.emit("messages", messages)
-    })
-
-    socket.on("new_product", async (product) => {
-        await productsList.save(product)
-        io.sockets.emit("products", await productsList.getAll())
-    })
 })
 
-app.get("/productos",(req,res)=>{
-    productsList.getAll().then(products => {
-        res.render("main", {products:products})
-    })
+routerProducts.post("/", loginCheck, validationCheck ,(req,res) => {
+    const productToAdd = {
+        title:req.body.title,
+        description:req.body.description,
+        code:req.body.code,
+        price:parseInt(req.body.price),
+        thumbnail:req.body.thumbnail,
+        stock:req.body.stock
+    }
+    if (productToAdd === undefined){res.status(400).send({error: "product no puede ser 'undefined'"})}
+    else{
+        products.save(productToAdd)
+        .then((productAdded) => {
+            res.json({
+                productAdded:productAdded,
+                id:productAdded.id
+            })
+        })
+    }
 })
 
-/* app.delete('/:idNumber',(req,res) => {
+routerProducts.put('/:idNumber', loginCheck, validationCheck ,(req,res) => {
     const idProduct = parseInt(req.params.idNumber);
-    productsList.deleteById(idProduct)
-    .then(() => res.send('Producto eliminado correctamente'))
-}) */
+    const productUpdate = req.body;
+    if (productUpdate === undefined){res.status(400).send({error: "productUpdate no puede ser 'undefined'"})}
+    else {
+        products.modifyProduct(idProduct,productUpdate)
+        .then(promise => res.send(promise));
+    }
+})
 
-httpServer.listen(8080, ()=> {
-    console.log("Server Listening port: 8080");
+routerProducts.delete('/:idNumber', loginCheck, validationCheck ,(req,res) => {
+    const idProduct = parseInt(req.params.idNumber);
+    products.deleteById(idProduct)
+    .then(() => res.send('Producto eliminado correctamente'))
+})
+
+routerCart.post("/", loginCheck, async (req,res)=> {
+    const newCart = {
+        timeStamp:Date(),
+        products:[]
+    }
+    const newItem = await carts.save(newCart);
+
+    res.send(await carts.getById(newItem.id))
+
+})
+
+routerCart.delete("/:idCart", loginCheck, (req,res)=>{
+    const idCart = parseInt(req.params.idCart);
+    carts.deleteById(idCart);
+    res.send(`Carrito id:${idCart}, Eliminado correctamente`)
+})
+
+routerCart.get("/:idCart/productos", loginCheck, async (req,res)=>{
+    const idCart = parseInt(req.params.idCart);
+    const carrito = await carts.getById(idCart)
+    res.send(JSON.stringify(carrito.products))
+})
+
+routerCart.post("/:idCart/productos", loginCheck, async (req,res)=>{
+    const idCart = parseInt(req.params.idCart);
+    const idProdToAdd = parseInt(req.body.idProdToAdd)
+    if(!idProdToAdd){ res.status(400).send("idProdToAdd no puede ser undefined")}
+    else {
+        const productToAdd = await products.getById(idProdToAdd)
+        if (!productToAdd){res.status(400).send("No hay producto para agregar con este id")}
+        else{
+            const thisCart = await carts.getById(idCart)
+            thisCart.products.push(productToAdd)
+            carts.modifyProduct(idCart,{products:thisCart.products})
+            res.send(`Se añadio un producto al carrito ${idCart}`)
+        }
+    }
+})
+
+routerCart.delete("/:idCart/productos/:id_prod", loginCheck, async (req,res)=>{
+    const idCart = parseInt(req.params.idCart);
+    const idProd = parseInt(req.params.id_prod);
+    const thisCart = await carts.getById(idCart)
+    const newProductsList = thisCart.products.filter((prod) => prod.id !== idProd)
+    carts.modifyProduct(idCart,{products:newProductsList})
+    res.send(`se elimino el producto ${idProd} del carrrito ${idCart}`)
+})
+
+app.use("/api/productos",routerProducts);
+app.use("/api/carrito",routerCart);
+
+app.use((req,res) => {
+    res.status(404).send("URL no Implementada")
+})
+
+app.listen(8080, () => {
+    console.log("escuchado");
 })

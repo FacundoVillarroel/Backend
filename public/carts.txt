@@ -1,0 +1,44 @@
+[
+  {
+    "timeStamp": "2022-06-07T18:01:25.144Z",
+    "products": [
+      {
+        "title": "Buzo",
+        "description": "Buzo original del equipo Recreativo",
+        "code": "Bu",
+        "price": 1350,
+        "thumbnail": "https://firebasestorage.googleapis.com/v0/b/projectofinalreactjs.appspot.com/o/buzo.jpeg?alt=media&token=5703fe18-b50b-459f-9a51-98fe4cbb471c",
+        "stock": 10,
+        "id": 3,
+        "timeStamp": "2022-06-07T16:40:08.088Z"
+      }
+    ],
+    "id": 4
+  },
+  {
+    "timeStamp": "2022-06-07T20:23:52.326Z",
+    "products": [
+      {
+        "title": "Pelota de fútbol kappa original",
+        "description": "Pelota de fútbol utilizado durante el torneo Campa 2022",
+        "code": "PeFuKaOr",
+        "price": 850,
+        "thumbnail": "https://firebasestorage.googleapis.com/v0/b/projectofinalreactjs.appspot.com/o/ball4.png?alt=media&token=422ec7cd-83a9-4720-ba3c-b50bd178c505",
+        "stock": 10,
+        "id": 2,
+        "timeStamp": "2022-06-07T16:38:08.419Z"
+      },
+      {
+        "title": "Buzo",
+        "description": "Buzo original del equipo Recreativo",
+        "code": "Bu",
+        "price": 1200,
+        "thumbnail": "https://firebasestorage.googleapis.com/v0/b/projectofinalreactjs.appspot.com/o/buzo.jpeg?alt=media&token=5703fe18-b50b-459f-9a51-98fe4cbb471c",
+        "stock": 10,
+        "id": 3,
+        "timeStamp": "2022-06-07T16:40:08.088Z"
+      }
+    ],
+    "id": 5
+  }
+]
