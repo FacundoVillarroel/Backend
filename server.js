@@ -67,7 +67,6 @@ routerProducts.delete('/:idNumber', loginCheck, validationCheck ,(req,res) => {
 
 routerCart.post("/", loginCheck, async (req,res)=> {
     const newCart = {
-        timeStamp:Date(),
         products:[]
     }
     const newItem = await carts.save(newCart);
