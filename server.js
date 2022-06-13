@@ -1,12 +1,29 @@
 const express = require ("express");
-const fs = require ("fs")
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
 let Contenedor = require ("./classConstructor")
 
-const productsList = new Contenedor ("products.txt");
-productsList.prevContent();
+const mysqlOptions = {
+    client: "mysql2",
+    connection: {
+        host: "127.0.0.1",
+        user: "admin",
+        password: "admin",
+        database: "ecommerce"
+    }
+}
+
+const SQLite3Options = {
+    client: "sqlite3",
+    connection: {
+        filename:"./DB/ecommerce.sqlite"
+    },
+    useNullAsDefault:true
+}
+
+const productsList = new Contenedor (mysqlOptions,"products");
+const messagesList = new Contenedor (SQLite3Options,"messages");
 
 const app = express ();
 app.use(express.static("public"));
@@ -27,47 +44,23 @@ app.set("view engine", "hbs");
 const httpServer = new HTTPServer (app);
 const io = new IOServer (httpServer);
 
-// functions to write and read files
-
-const writeFile = async (fileName, array) => {
-    try {
-        await fs.promises.writeFile(`${fileName}`, JSON.stringify(array))
-    } catch {
-        throw new Error('Problem with the writing of the file')
-    }
-}
-
-const readFile = async (fileName) => {
-    try {        
-        const itExists = fs.existsSync(fileName)
-        if(itExists) {
-            return JSON.parse(await fs.promises.readFile(fileName));
-        } else {
-            return []
-        }
-    } catch {
-        throw new Error('Problem with getting the array out of the file')
-    }
-}
-
 let messages = []
+
 // Socket Connections
 
 io.on("connection", async (socket) => {
-    messages = await readFile("./public/messages.txt")
+    messages = await messagesList.getAll();
     socket.emit("messages", messages);
     socket.emit("products", await productsList.getAll());
     
-    socket.on("new_message",(message) => {
-        console.log("1",messages);
-        messages.push(message);
-        console.log("2",messages);
-        writeFile('./public/messages.txt', messages)
-        console.log("3",messages);
+    socket.on("new_message",async (message) => {
+        messages.push(message)
+        await messagesList.save(message)
         io.sockets.emit("messages", messages)
     })
 
     socket.on("new_product", async (product) => {
+        product.timeStamp = new Date();
         await productsList.save(product)
         io.sockets.emit("products", await productsList.getAll())
     })
@@ -78,12 +71,6 @@ app.get("/productos",(req,res)=>{
         res.render("main", {products:products})
     })
 })
-
-/* app.delete('/:idNumber',(req,res) => {
-    const idProduct = parseInt(req.params.idNumber);
-    productsList.deleteById(idProduct)
-    .then(() => res.send('Producto eliminado correctamente'))
-}) */
 
 httpServer.listen(8080, ()=> {
     console.log("Server Listening port: 8080");
