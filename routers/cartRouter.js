@@ -6,8 +6,8 @@ cartRouter.use(express.urlencoded({extended:true}));
 
 //import { DaoCart } from "../src/daos";
 
-const DaoCart = require("../src/daos/carts/DaoFileCarts");
-//const DaoCart = require("../src/daos/carts/DaoFirebaseCarts");
+//const DaoCart = require("../src/daos/carts/DaoFileCarts");
+const DaoCart = require("../src/daos/carts/DaoFirebaseCarts");
 //const DaoCart = require("../src/daos/carts/DaoMemoryCarts");
 //const DaoCart = require("../src/daos/carts/DaoMongoDbCarts");
 

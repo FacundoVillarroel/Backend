@@ -2,11 +2,16 @@ const socket = io()
 
 const sendMessage = () => {
     const email = document.querySelector("#email").value;
-    const text = document.querySelector("#message").value;
+    const name = document.querySelector("#name").value;
+    const surname = document.querySelector("#surname").value;
+    const age = parseInt(document.querySelector("#age").value);
+    const alias = document.querySelector("#alias").value;
+    const avatar = document.querySelector("#avatar").value;
     const date = new Date();
     const timeStamp = `${date.getDate() < 10 ? '0' + (date.getDate() + 1) : (date.getDate() + 1)}/${date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()}/${date.getFullYear()} ${date.getHours() < 10 ? '0' + (date.getHours()) : (date.getHours())}:${date.getMinutes() < 10 ? '0' + (date.getMinutes()) : (date.getMinutes())}:${date.getSeconds() < 10 ? '0' + (date.getSeconds()) : (date.getSeconds())}`
-    const message = {email, text, timeStamp};
-    console.log("mensaje:",message);
+    const author = {email, name, surname, age, alias, avatar}
+    const text = document.querySelector("#message").value;
+    const message = {author, text, timeStamp};
     socket.emit("new_message", message);
     return false
 }
@@ -24,9 +29,9 @@ const sendProduct = () => {
 }
 
 const createTagMessage = (message) => {
-    const {email, text, timeStamp} = message;
+    const {author, text, timeStamp} = message;
     return (`
-        <p><span class="email">${email}</span><span class="date">${timeStamp} :</span><span class="text">${text}</span></p>
+        <p><span class="email">${author.alias}</span><span class="date">${timeStamp} :</span><span class="text">${text}</span><span><img class="imgAvatar" src= ${author.avatar} alt= ${author.name} ${author.surname}/></span></p>
     `)
 }
 
@@ -35,7 +40,7 @@ const createTagProduct = (product) => {
     return(`
     <tr class="d-flex justify-content-between">
         <td style="margin-bottom: 20px; width:33.3%">${name}</td>
-        <td style="margin-bottom: 20px; width:33.3%">${price}</td>
+        <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
         <td style="margin-bottom: 20px; width:33.3%"><img src="${thumbnail}" alt="${name}" height="150" width="200"></td>
     </tr>
     `)

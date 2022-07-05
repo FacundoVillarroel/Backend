@@ -8,7 +8,16 @@
                 <th style="margin-bottom: 20px; width:33.3%">Imagen</th>
             </tr>
         </thead>
-        <tbody id="productContainer">                               
+        <tbody id="productContainer"> 
+            {{#if products}}
+                {{#each products}}
+                    <tr class="d-flex justify-content-between">
+                        <td style="margin-bottom: 20px; width:33.3%">{{this.name}}</td>
+                        <td style="margin-bottom: 20px; width:33.3%">${{price}}</td>
+                        <td style="margin-bottom: 20px; width:33.3%"><img src={{thumbnail}} alt={{name}} height="150" width="200"></td>
+                    </tr>
+                {{/each}}
+            {{/if}}                              
         </tbody>
     </table>
 {{else}}
