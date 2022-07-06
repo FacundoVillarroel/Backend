@@ -41,7 +41,6 @@ const armarMock = () => {
         thumbnail:faker.image.transport(200, 150, true)
     }
 }
-
 io.on("connection", async (socket) => {
     const mocks = [];
     for (let i = 0; i < 5; i++){

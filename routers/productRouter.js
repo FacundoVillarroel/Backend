@@ -6,10 +6,10 @@ productRouter.use(express.urlencoded({extended:true}));
 
 //import ("../src/daos").then(data => {data.DaoProduct})
 
-const DaoProduct = require ("../src/daos/products/DaoFileProducts");
+//const DaoProduct = require ("../src/daos/products/DaoFileProducts");
 //const DaoProduct = require ("../src/daos/products/DaoMemoryProducts");
 //const DaoProduct = require ("../src/daos/products/DaoMongoDbProducts");
-//const DaoProduct = require ("../src/daos/products/DaoFirebaseProducts");
+const DaoProduct = require ("../src/daos/products/DaoFirebaseProducts");
 
 const products = new DaoProduct();
 

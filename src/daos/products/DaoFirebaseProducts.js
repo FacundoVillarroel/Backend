@@ -1,14 +1,21 @@
+const { cartRouter } = require("../../../routers/cartRouter.js");
 const FirebaseContainer = require("../../containers/FirebaseContainer.js");
 
 class DaoFirebaseProducts extends FirebaseContainer {
+  static idCounter = 0
   constructor() {
     super("products")
   }
 
   async save(item){
-    //idCounter no tiene que ser harcodeado
-    let idCounter = 5
-    const productToAdd = this.query.doc(`${idCounter}`);
+    const allProducts = await this.query.get();
+    allProducts.forEach((product) => {
+      if(DaoFirebaseProducts.idCounter <= product.data().id){
+        DaoFirebaseProducts.idCounter = product.data().id +1;
+      }
+    })
+    item.id = DaoFirebaseProducts.idCounter;
+    const productToAdd = this.query.doc(`${DaoFirebaseProducts.idCounter}`);
     await productToAdd.create(item)
 
     return `Producto Agregado Correctamente, id: ${item.id}`
@@ -20,7 +27,6 @@ class DaoFirebaseProducts extends FirebaseContainer {
   }
 
   async getAll(){
-    console.log();
     const products = await this.query.get();
     return products.docs.map(doc=> doc.data());
   }

@@ -1,6 +1,7 @@
 const FirebaseContainer = require("../../containers/FirebaseContainer.js");
 
 class DaoFirebaseCarts extends FirebaseContainer {
+  static idCounter = 0
   constructor() {
     super("carts");
   }
@@ -11,8 +12,14 @@ class DaoFirebaseCarts extends FirebaseContainer {
   }
 
   async save (item){
-    let idCounter = 3;
-    const cartToAdd = this.query.doc(`${idCounter}`);
+    const allCarts = await this.query.get();
+    allCarts.forEach((cart) => {
+      if(DaoFirebaseCarts.idCounter <= cart.data().id){
+        DaoFirebaseCarts.idCounter = cart.data().id +1;
+      }
+    })
+    item.id = DaoFirebaseCarts.idCounter
+    const cartToAdd = this.query.doc(`${DaoFirebaseCarts.idCounter}`);
     await cartToAdd.create(item)
     
   }
