@@ -1,5 +1,14 @@
 const socket = io()
 
+const authorSchema = new normalizr.schema.Entity("authors",{},{idAttribute:"email"})
+const messageSchema = new normalizr.schema.Entity("messages",{
+    author:authorSchema
+})
+const messagesListSchema = new normalizr.schema.Entity("messagesList",{
+    messages: [messageSchema]
+})
+
+
 const sendMessage = () => {
     const email = document.querySelector("#email").value;
     const name = document.querySelector("#name").value;
@@ -46,10 +55,26 @@ const createTagProduct = (product) => {
     `)
 }
 
-const addMessage = (messages) => {
+const createTagCompressionPercentage = (normalizedMessages, denormalizedMessages) => {
+    const normalizedMessagesLength = JSON.stringify(normalizedMessages).length
+    const denormalizedMessagesLength = JSON.stringify(denormalizedMessages).length
+    const percentage = ((normalizedMessagesLength * 100) / denormalizedMessagesLength).toFixed(2)
+    const tag = (`
+    <>
+        (Compresión: ${percentage}%)
+    </>
+    `)
+    const percentageContainer = document.querySelector("#compressionPercentage");
+    if (percentageContainer) percentageContainer.innerHTML = tag;
+}
+
+const addMessage = (normalizedMessages) => {
+    const denormalizedMessages = normalizr.denormalize(normalizedMessages.result, messagesListSchema, normalizedMessages.entities)
+    const messages = denormalizedMessages.messages;
     const finalMessage = messages.map(message => createTagMessage(message)).join(" ");
     const messageContainer = document.querySelector("#messagesContainer")
-    if (messageContainer) messageContainer.innerHTML = finalMessage
+    if (messageContainer) messageContainer.innerHTML = finalMessage;
+    createTagCompressionPercentage(normalizedMessages, denormalizedMessages);
 }
 
 const addProduct = (products) => {
@@ -59,5 +84,5 @@ const addProduct = (products) => {
 }
 
 
-socket.on('messages', (messages) => addMessage(messages));
+socket.on('messages', (normalizedMessages) => addMessage(normalizedMessages));
 socket.on("products", (products) => addProduct(products))

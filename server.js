@@ -3,14 +3,14 @@ const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
 const Contenedor = require ("./classConstructor");
-const DaoMongoDbMessages = require ("./src/daos/messages/DaoMongoDbMessages.js");
+const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
 
-const {mysqlOptions, SQLite3Options} = require ("./src/utils/config");
+const {mysqlOptions} = require ("./src/utils/config");
 
 const productsList = new Contenedor (mysqlOptions,"products");
-const messagesList = new DaoMongoDbMessages();
-messagesList.normalize();
+const messagesList = new DaoFirebaseMessages();
+
 const app = express ();
 
 const { productRouter } = require ("./routers/productRouter");
@@ -47,14 +47,13 @@ io.on("connection", async (socket) => {
     for (let i = 0; i < 5; i++){
         mocks.push(armarMock())
     }
-    messages = await messagesList.getAll();
-    socket.emit("messages", messages);
+    
+    socket.emit("messages", await messagesList.normalize());
     socket.emit("products", mocks);
     
     socket.on("new_message",async (message) => {
-        messages.push(message)
         await messagesList.save(message)
-        io.sockets.emit("messages", messages)
+        io.sockets.emit("messages", await messagesList.normalize())
     })
 
     socket.on("new_product", async (product) => {
