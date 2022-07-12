@@ -31,14 +31,13 @@ app.use(session({
             mongoOptions:{
                 useNewUrlParser: true,
                 useUnifiedTopology: true
-            },
-            ttl:60000,
-            resave:true
+            }
         }),
     secret:"facu",
     resave:true,
+    rolling:true,
     cookie: {
-        maxAge:30000
+        maxAge:60000,
     },
     saveUninitialized:false
 }))
