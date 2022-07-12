@@ -5,8 +5,12 @@ const {Server: IOServer} = require ("socket.io");
 const Contenedor = require ("./classConstructor");
 const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const MongoStore = require("connect-mongo");
 
 const {mysqlOptions} = require ("./src/utils/config");
+const loginCheck = require("./middelwares/loginCheck")
 
 const productsList = new Contenedor (mysqlOptions,"products");
 const messagesList = new DaoFirebaseMessages();
@@ -19,6 +23,25 @@ const { cartRouter } = require ("./routers/cartRouter");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(session({
+    store:MongoStore.create({
+            mongoUrl:"mongodb+srv://user:VGXiKIY4hoVhNYmR@cluster0.p4wsd.mongodb.net/?retryWrites=true&w=majority",
+            mongoOptions:{
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            },
+            ttl:60000,
+            resave:true
+        }),
+    secret:"facu",
+    resave:true,
+    cookie: {
+        maxAge:30000
+    },
+    saveUninitialized:false
+}))
 
 app.engine (
     "hbs",
@@ -62,10 +85,31 @@ io.on("connection", async (socket) => {
     })
 })
 
-app.get("/productos",(req,res)=>{
+app.get("/login" , ( req, res ) => {
+    if (req.session.name){
+        res.redirect("/productos")
+    } else {
+    res.render("login", {})
+    }
+})
+
+app.post("/login", ( req, res ) => {
+        req.session.name = req.body.name
+        res.redirect("/productos")
+})
+
+app.get("/productos", loginCheck, (req,res)=>{
     productsList.getAll().then(products => {
-        res.render("main", {products:products})
+        res.render("main", {user:req.session.name, products:products})
     })
+})
+
+app.get("/logout", loginCheck, ( req, res) => {
+    const user = req.session.name
+    req.session.destroy((err) => {
+        console.log(err);
+        res.render("logout" , {user:user})
+    });
 })
 
 app.get("/api/productos-test", ( req, res) => {

@@ -59,11 +59,7 @@ const createTagCompressionPercentage = (normalizedMessages, denormalizedMessages
     const normalizedMessagesLength = JSON.stringify(normalizedMessages).length
     const denormalizedMessagesLength = JSON.stringify(denormalizedMessages).length
     const percentage = ((normalizedMessagesLength * 100) / denormalizedMessagesLength).toFixed(2)
-    const tag = (`
-    <>
-        (Compresión: ${percentage}%)
-    </>
-    `)
+    const tag = (`(Compresión: ${percentage}%)`)
     const percentageContainer = document.querySelector("#compressionPercentage");
     if (percentageContainer) percentageContainer.innerHTML = tag;
 }

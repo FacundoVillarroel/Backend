@@ -11,26 +11,6 @@
         <title>Document</title>
     </head>
     <body>
-        <div class="container main">
-            <h1 class="title">Ingrese producto</h1>
-            <form onsubmit="return sendProduct()" class="my-5 d-flex flex-column">
-                <label for="name"><strong>Nombre:</strong></label>
-                <input type="text" id="name" name="name" required class="mb-4">
-                <label for="code"><strong>Código del producto:</strong></label>
-                <input type="text" id="code" name="code" required class="mb-4">
-                <label for="description"><strong>Descripción del producto:</strong></label>
-                <input type="text" id="description" name="description" required class="mb-4">
-                <label for="price"><strong>Precio:</strong></label>
-                <input type="number" id="price" name="price" required class="mb-4">
-                <label for="stock"><strong>Stock:</strong></label>
-                <input type="number" id="stock" name="stock" required class="mb-4">
-                <label for="thumbnail"><strong>Foto URL:</strong></label>
-                <input type="text" id="thumbnail" name="thumbnail" required class="mb-4">
-                <button type="submit" class="btn btn-success">Enviar</button>
-            </form>
-            {{{body}}}
-            <a href="/" class="btn btn-primary my-3">Ir a home</a>
-        </div>
-        
+        {{{body}}}
     </body>
 </html>
