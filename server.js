@@ -6,11 +6,12 @@ const Contenedor = require ("./classConstructor");
 const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
 const session = require("express-session");
+const passport = require("./passport")
 const cookieParser = require("cookie-parser");
-const MongoStore = require("connect-mongo");
 
 const {mysqlOptions} = require ("./src/utils/config");
 const loginCheck = require("./middelwares/loginCheck")
+const routes = require("./src/routes/routes")
 
 const productsList = new Contenedor (mysqlOptions,"products");
 const messagesList = new DaoFirebaseMessages();
@@ -26,21 +27,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(session({
-    store:MongoStore.create({
-            mongoUrl:"mongodb+srv://user:VGXiKIY4hoVhNYmR@cluster0.p4wsd.mongodb.net/?retryWrites=true&w=majority",
-            mongoOptions:{
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }
-        }),
     secret:"facu",
     resave:true,
     rolling:true,
     cookie: {
-        maxAge:60000,
+        maxAge:600000,
     },
     saveUninitialized:false
 }))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.engine (
     "hbs",
@@ -84,32 +81,21 @@ io.on("connection", async (socket) => {
     })
 })
 
-app.get("/login" , ( req, res ) => {
-    if (req.session.name){
-        res.redirect("/productos")
-    } else {
-    res.render("login", {})
-    }
-})
+app.get("/login" , routes.getLogin)
 
-app.post("/login", ( req, res ) => {
-        req.session.name = req.body.name
-        res.redirect("/productos")
-})
+app.post("/login", passport.authenticate("autenticacion", {failureRedirect:"/failLogin"}), routes.postLoguin)
 
-app.get("/productos", loginCheck, (req,res)=>{
-    productsList.getAll().then(products => {
-        res.render("main", {user:req.session.name, products:products})
-    })
-})
+app.get("/register", routes.getRegister)
 
-app.get("/logout", loginCheck, ( req, res) => {
-    const user = req.session.name
-    req.session.destroy((err) => {
-        console.log(err);
-        res.render("logout" , {user:user})
-    });
-})
+app.post("/register", passport.authenticate("registracion", {failureRedirect:"/failRegister"}) , routes.postRegister)
+
+app.get("/failLogin", routes.getFailLogin)
+
+app.get("/failRegister", routes.getFailRegister)
+
+app.get("/productos", loginCheck, routes.getProductos)
+
+app.get("/logout", routes.getLogout)
 
 app.get("/api/productos-test", ( req, res) => {
     const mocks = [];
@@ -121,7 +107,7 @@ app.get("/api/productos-test", ( req, res) => {
 
 app.use("/api/productos", productRouter);
 app.use("/api/carrito", cartRouter);
-app.use( function (req, res) {
+app.use((req, res) => {
     res.send({Error: `ruta ${req.originalUrl} metodo ${req.method} No implementado`})
 })
 
