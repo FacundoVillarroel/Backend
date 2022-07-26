@@ -4,7 +4,7 @@ const serviceAccount = require("../../firebaseDatos.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://backend-coderhouse-d6df8.firebaseio.com"
+  databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
 class FirebaseContainer {

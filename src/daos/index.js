@@ -1,20 +1,17 @@
-const DaoFileCarts = require("../src/daos/carts/DaoFileCarts");
-const DaoMemoryCarts = require("../src/daos/carts/DaoMemoryCarts");
-const DaoMongoDbCarts = require("../src/daos/carts/DaoMongoDbCarts");
-const DaoFirebaseCarts = require("../src/daos/carts/DaoFirebaseCarts");
+const DaoFileCarts = require("./carts/DaoFileCarts");
+const DaoMemoryCarts = require("./carts/DaoMemoryCarts");
+const DaoMongoDbCarts = require("./carts/DaoMongoDbCarts");
+const DaoFirebaseCarts = require("./carts/DaoFirebaseCarts");
 
-const DaoFileProducts = require ("../src/daos/products/DaoFileProducts");
-const DaoMemoryProducts = require ("../src/daos/products/DaoMemoryProducts");
-const DaoMongoDbProducts = require ("../src/daos/products/DaoMongoDbProducts");
-const DaoFirebaseProducts = require ("../src/daos/products/DaoFirebaseProducts");
+const DaoFileProducts = require ("./products/DaoFileProducts");
+const DaoMemoryProducts = require ("./products/DaoMemoryProducts");
+const DaoMongoDbProducts = require ("./products/DaoMongoDbProducts");
+const DaoFirebaseProducts = require ("./products/DaoFirebaseProducts");
 
 let containerToExportProduct = "";
 let containerToExportcart = "";
 
-const DATA_BASE_PRODUCTS = "fs"
-const DATA_BASE_CARTS = "fs"
-
-switch(DATA_BASE_PRODUCTS){
+switch(process.env.DATA_BASE_PRODUCTS){
   case "fs": containerToExportProduct = DaoFileProducts;
   break;
   case "memory": containerToExportProduct = DaoMemoryProducts;
@@ -25,7 +22,7 @@ switch(DATA_BASE_PRODUCTS){
   break;
 }
 
-switch(DATA_BASE_CARTS){
+switch(process.env.DATA_BASE_CARTS){
   case "fs": containerToExportcart = DaoFileCarts;
   break;
   case "memory": containerToExportcart = DaoMemoryCarts;
@@ -36,8 +33,7 @@ switch(DATA_BASE_CARTS){
   break;
 }
 
-const ContainerProduct = await import(containerToExportProduct);
-const ContainerCart = await import(containerToExportcart);
+const DaoProduct = containerToExportProduct
+const DaoCart = containerToExportcart
 
-export const DaoProduct = ContainerProduct;
-export const DaoCart = ContainerCart;
+module.exports=  {DaoProduct, DaoCart}

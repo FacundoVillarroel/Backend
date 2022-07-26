@@ -10,7 +10,7 @@ productRouter.use(express.urlencoded({extended:true}));
 //const DaoProduct = require ("../src/daos/products/DaoMemoryProducts");
 //const DaoProduct = require ("../src/daos/products/DaoMongoDbProducts");
 const DaoProduct = require ("../src/daos/products/DaoFirebaseProducts");
-
+//const {DaoProduct} = require("../src/daos/index")
 const products = new DaoProduct();
 
 productRouter.get("/:id?", async (req, res) => {
