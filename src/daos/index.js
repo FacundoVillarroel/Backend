@@ -9,7 +9,7 @@ const DaoMongoDbProducts = require ("./products/DaoMongoDbProducts");
 const DaoFirebaseProducts = require ("./products/DaoFirebaseProducts");
 
 let containerToExportProduct = "";
-let containerToExportcart = "";
+let containerToExportCart = "";
 
 switch(process.env.DATA_BASE_PRODUCTS){
   case "fs": containerToExportProduct = DaoFileProducts;
@@ -23,17 +23,17 @@ switch(process.env.DATA_BASE_PRODUCTS){
 }
 
 switch(process.env.DATA_BASE_CARTS){
-  case "fs": containerToExportcart = DaoFileCarts;
+  case "fs": containerToExportCart = DaoFileCarts;
   break;
-  case "memory": containerToExportcart = DaoMemoryCarts;
+  case "memory": containerToExportCart = DaoMemoryCarts;
   break;
-  case "mongoDb": containerToExportcart = DaoMongoDbCarts;
+  case "mongoDb": containerToExportCart = DaoMongoDbCarts;
   break;
-  case "firebase": containerToExportcart = DaoFirebaseCarts;
+  case "firebase": containerToExportCart = DaoFirebaseCarts;
   break;
 }
 
 const DaoProduct = containerToExportProduct
-const DaoCart = containerToExportcart
+const DaoCart = containerToExportCart
 
 module.exports=  {DaoProduct, DaoCart}

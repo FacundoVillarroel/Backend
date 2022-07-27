@@ -1,4 +1,3 @@
-const { cartRouter } = require("../../../routers/cartRouter.js");
 const FirebaseContainer = require("../../containers/FirebaseContainer.js");
 
 class DaoFirebaseProducts extends FirebaseContainer {

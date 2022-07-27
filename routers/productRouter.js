@@ -4,13 +4,9 @@ const productRouter = express.Router();
 productRouter.use(express.json());
 productRouter.use(express.urlencoded({extended:true}));
 
-//import ("../src/daos").then(data => {data.DaoProduct})
+//import ("../src/daos/index").then(data => {data.DaoProduct})
 
-//const DaoProduct = require ("../src/daos/products/DaoFileProducts");
-//const DaoProduct = require ("../src/daos/products/DaoMemoryProducts");
-//const DaoProduct = require ("../src/daos/products/DaoMongoDbProducts");
-const DaoProduct = require ("../src/daos/products/DaoFirebaseProducts");
-//const {DaoProduct} = require("../src/daos/index")
+const {DaoProduct} = require ("../src/daos/index")
 const products = new DaoProduct();
 
 productRouter.get("/:id?", async (req, res) => {
