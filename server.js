@@ -1,7 +1,7 @@
-require("dotenv").config()
+require("dotenv").config();
 
-const minimist = require("minimist")
-const args = minimist(process.argv, {alias: {"p": "port"}})
+const minimist = require("minimist");
+const args = minimist(process.argv.slice(2), {alias: {"p": "port", "m": "modo"}, default:{ "port": 8080, "modo":"fork"}});
 
 const express = require ("express");
 const { engine } = require ("express-handlebars");
@@ -11,12 +11,17 @@ const Contenedor = require ("./src/utils/classConstructor");
 const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
 const session = require("express-session");
-const passport = require("./passport")
+const passport = require("./passport");
 const cookieParser = require("cookie-parser");
 
 const {mysqlOptions} = require ("./src/utils/config");
-const loginCheck = require("./middelwares/loginCheck")
-const routes = require("./src/routes/routes")
+const loginCheck = require("./middelwares/loginCheck");
+const routes = require("./src/routes/routes");
+
+const cluster = require("cluster");
+const os = require("os");
+const numCPU = os.cpus().length;
+
 
 const productsList = new Contenedor (mysqlOptions,"products");
 const messagesList = new DaoFirebaseMessages();
@@ -95,7 +100,8 @@ app.get("/info", ( rqe, res ) => {
         memory: process.memoryUsage.rss(),
         path: process.cwd(),
         processId:process.pid,
-        file:__dirname
+        file:__dirname,
+        CPUS: os.cpus().length
     }
     info.keys= Object.keys(info.args)
     res.render("info", {info:info})
@@ -133,6 +139,22 @@ app.use((req, res) => {
     res.send({Error: `ruta ${req.originalUrl} metodo ${req.method} No implementado`})
 })
 
-httpServer.listen(args.port || 8080, ()=> {
-    console.log("Server Listening port: ", args.port || 8080);
-})
+const PORT = args.port;
+
+if ( args.modo == "cluster") {
+    if(cluster.isPrimary) {
+        for (let i = 0; i < numCPU; i++){
+            cluster.fork()
+        }
+    } else {
+        httpServer.listen( PORT, () => {})
+    }
+}
+
+console.log("ARGUMENTOS ---->", args);
+
+if (args.modo == "fork") {
+    httpServer.listen(PORT, () => {
+        console.log(`Escuchando en el puerto ${httpServer.address().port}`);
+    })
+}
