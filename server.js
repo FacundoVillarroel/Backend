@@ -76,10 +76,10 @@ io.on("connection", async (socket) => {
     for (let i = 0; i < 5; i++){
         mocks.push(armarMock())
     }
-    
+
     socket.emit("messages", await messagesList.normalize());
     socket.emit("products", mocks);
-    
+
     socket.on("new_message",async (message) => {
         await messagesList.save(message)
         io.sockets.emit("messages", await messagesList.normalize())
@@ -150,8 +150,6 @@ if ( args.modo == "cluster") {
         httpServer.listen( PORT, () => {})
     }
 }
-
-console.log("ARGUMENTOS ---->", args);
 
 if (args.modo == "fork") {
     httpServer.listen(PORT, () => {

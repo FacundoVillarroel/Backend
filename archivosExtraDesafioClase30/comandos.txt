@@ -1,0 +1,48 @@
+•creo server fork en 8080
+nodemon server.js 
+
+•verifico procesos de node por SO
+tasklist /fi "imagename eq node.exe"
+
+--------------------------------------------
+
+•creo server cluster en 8081
+nodemon server.js --port 8081 --modo cluster
+
+•verifico procesos de node por SO
+tasklist /fi "imagename eq node.exe"
+
+--------------------------------------------
+•Creo 3 server fork con forever en distintos puertos
+forever start server.js --port 8081 --modo fork
+forever start server.js --port 8082 --modo fork
+forever start server.js --port 8083
+
+•verifico procesos de node por SO
+tasklist /fi "imagename eq node.exe"
+
+•verifico procesos de node por Forever
+forever list
+
+•elimino un proceso de node por SO
+taskkill /f /pid 9888
+
+•Verifico que forever haya levantado un nuevo proceso
+forever list
+
+--------------------------------------------
+
+•Creo server for con pm2 en puerto 8081
+pm2 start server.js --name="server fork" --watch -- -- -p 8081
+
+•creo server cluster con pm2 en puerto 8082
+pm2 start server.js --name="server cluster" -i max --watch -- -- -p 8082
+
+•elimino por SO el proceso de fork
+taskkill /f /pid 27276
+
+•elimino por SO el proceso de un cluster
+taskkill /f /pid 14984
+
+•listo nuevamente los proceso de pm2 para verificar que se hayan levantado los dos proceso cerrados
+pm2 list
