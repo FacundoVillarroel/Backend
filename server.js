@@ -3,6 +3,8 @@ require("dotenv").config();
 const minimist = require("minimist");
 const args = minimist(process.argv.slice(2), {alias: {"p": "port", "m": "modo"}, default:{ "port": 8080, "modo":"fork"}});
 
+const favicon = require("serve-favicon");
+
 const express = require ("express");
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
@@ -13,6 +15,7 @@ const {faker} = require ("@faker-js/faker");
 const session = require("express-session");
 const passport = require("./passport");
 const cookieParser = require("cookie-parser");
+const compression = require ("compression")
 
 const {mysqlOptions} = require ("./src/utils/config");
 const loginCheck = require("./middelwares/loginCheck");
@@ -22,6 +25,8 @@ const cluster = require("cluster");
 const os = require("os");
 const numCPU = os.cpus().length;
 
+const logger = require ( "./src/logger");
+const logInfo = require( "./middelwares/logInfo")
 
 const productsList = new Contenedor (mysqlOptions,"products");
 const messagesList = new DaoFirebaseMessages();
@@ -32,10 +37,12 @@ const { productRouter } = require ("./routers/productRouter");
 const { cartRouter } = require ("./routers/cartRouter");
 const { randomsRouter } = require("./routers/randoms");
 
+app.use(favicon(__dirname + "/public/images/favicon.ico"))
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(logInfo)
 
 app.use(session({
     secret:process.env.SESION_SECRET,
@@ -92,7 +99,7 @@ io.on("connection", async (socket) => {
     })
 })
 
-app.get("/info", ( rqe, res ) => {
+app.get("/info", compression(), ( rqe, res ) => {
     const info= {
         args: args,
         sistema:process.platform,
@@ -136,6 +143,7 @@ app.use("/api/carrito", cartRouter);
 app.use("/api/randoms", randomsRouter);
 
 app.use((req, res) => {
+    logger.warn(`Ruta: ${req.originalUrl} Método: ${req.method} No implementado`)
     res.send({Error: `ruta ${req.originalUrl} metodo ${req.method} No implementado`})
 })
 
