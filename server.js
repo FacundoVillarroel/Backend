@@ -114,6 +114,22 @@ app.get("/info", compression(), ( rqe, res ) => {
     res.render("info", {info:info})
 })
 
+app.get("/infoConsole", compression(), ( rqe, res ) => {
+    const info= {
+        args: args,
+        sistema:process.platform,
+        nodeVersion: process.version,
+        memory: process.memoryUsage.rss(),
+        path: process.cwd(),
+        processId:process.pid,
+        file:__dirname,
+        CPUS: os.cpus().length
+    }
+    info.keys= Object.keys(info.args)
+    console.log(info);
+    res.render("info", {info:info})
+})
+
 app.get("/login" , routes.getLogin)
 
 app.post("/login", passport.authenticate("autenticacion", {failureRedirect:"/failLogin"}), routes.postLoguin)
