@@ -99,7 +99,7 @@ io.on("connection", async (socket) => {
     })
 })
 
-app.get("/info", compression(), ( rqe, res ) => {
+app.get("/info", compression(), ( req, res ) => {
     const info= {
         args: args,
         sistema:process.platform,
@@ -114,7 +114,7 @@ app.get("/info", compression(), ( rqe, res ) => {
     res.render("info", {info:info})
 })
 
-app.get("/infoConsole", compression(), ( rqe, res ) => {
+app.get("/infoConsole", compression(), ( req, res ) => {
     const info= {
         args: args,
         sistema:process.platform,
