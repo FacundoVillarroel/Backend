@@ -163,7 +163,7 @@ app.use((req, res) => {
     res.send({Error: `ruta ${req.originalUrl} metodo ${req.method} No implementado`})
 })
 
-const PORT = args.port;
+const PORT = process.env.PORT || args.port;
 
 if ( args.modo == "cluster") {
     if(cluster.isPrimary) {
