@@ -50,7 +50,8 @@ const createTagProduct = (product) => {
     <tr class="d-flex justify-content-between">
         <td style="margin-bottom: 20px; width:33.3%">${name}</td>
         <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
-        <td style="margin-bottom: 20px; width:33.3%"><img src="${thumbnail}" alt="${name}" height="150" width="200"></td>
+        <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${name}" height="150" width="200"></td>
+        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success">+</button></td>
     </tr>
     `)
 }

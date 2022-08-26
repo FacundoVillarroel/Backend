@@ -1,2 +1,14 @@
 [2022-08-12T23:12:26.947] [WARN] development - Ruta: /hola Método: GET No implementado
 [2022-08-12T23:12:46.543] [ERROR] development - Error: Error: No existe producto con ese ID
+[2022-08-26T11:14:42.228] [WARN] development - Ruta: /upload Método: POST No implementado
+[2022-08-26T11:26:59.127] [WARN] development - Ruta: /upload Método: POST No implementado
+[2022-08-26T11:27:19.387] [WARN] development - Ruta: /upload Método: POST No implementado
+[2022-08-26T17:52:53.039] [WARN] development - Ruta: /upload Método: POST No implementado
+[2022-08-26T18:21:00.668] [WARN] development - Ruta: /upload Método: GET No implementado
+[2022-08-26T18:56:04.696] [WARN] development - Ruta: /1661532938990facu.jpeg Método: GET No implementado
+[2022-08-26T18:56:10.997] [WARN] development - Ruta: /avatar/1661532938990facu.jpeg Método: GET No implementado
+[2022-08-26T18:56:24.222] [WARN] development - Ruta: /public/avatar/1661532938990facu.jpeg Método: GET No implementado
+[2022-08-26T18:57:15.191] [WARN] development - Ruta: /1661532938990facu.jpeg Método: GET No implementado
+[2022-08-26T18:57:45.427] [WARN] development - Ruta: /images/1661532938990facu.jpeg Método: GET No implementado
+[2022-08-26T19:02:07.637] [WARN] development - Ruta: /facu.jpeg Método: GET No implementado
+[2022-08-26T19:10:48.049] [WARN] development - Ruta: /avatars/.jpeg Método: GET No implementado

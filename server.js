@@ -37,8 +37,19 @@ const { productRouter } = require ("./routers/productRouter");
 const { cartRouter } = require ("./routers/cartRouter");
 const { randomsRouter } = require("./routers/randoms");
 
+const multer = require("multer");
+/* const mimeTypes = require("mime-types") */
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: "public/avatars/",
+        filename: function(req, file, cb){
+            cb("", req.body.username +".jpeg" /*+ mimeTypes.extension(file.mimetype) */);
+        }
+    })
+})
+
 app.use(favicon(__dirname + "/public/images/favicon.ico"))
-app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -56,6 +67,12 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.get("/", loginCheck, ( req, res ) => {
+    res.sendFile(__dirname+"/public/index.html")
+})
+
+app.use(express.static("public"));
 
 app.engine (
     "hbs",
@@ -136,7 +153,7 @@ app.post("/login", passport.authenticate("autenticacion", {failureRedirect:"/fai
 
 app.get("/register", routes.getRegister)
 
-app.post("/register", passport.authenticate("registracion", {failureRedirect:"/failRegister"}) , routes.postRegister)
+app.post("/register",upload.single("avatar"), passport.authenticate("registracion", {failureRedirect:"/failRegister"}) , routes.postRegister)
 
 app.get("/failLogin", routes.getFailLogin)
 
