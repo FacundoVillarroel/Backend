@@ -45,13 +45,13 @@ const createTagMessage = (message) => {
 }
 
 const createTagProduct = (product) => {
-    const {name, price, thumbnail} = product;
+    const {id, title, price, thumbnail} = product;
     return(`
     <tr class="d-flex justify-content-between">
-        <td style="margin-bottom: 20px; width:33.3%">${name}</td>
+        <td style="margin-bottom: 20px; width:33.3%">${title}</td>
         <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
-        <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${name}" height="150" width="200"></td>
-        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success">+</button></td>
+        <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${title}" height="150" width="200"></td>
+        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success" onclick='return addToCart("${id}")'>+</button></td>
     </tr>
     `)
 }
@@ -83,3 +83,23 @@ const addProduct = (products) => {
 
 socket.on('messages', (normalizedMessages) => addMessage(normalizedMessages));
 socket.on("products", (products) => addProduct(products))
+
+const addToCart = async (id) =>{
+    const product = await (await fetch(`api/productos/${id}`)).json();
+    await fetch("/api/carrito/1/productos", {
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        method:"POST",
+        body: JSON.stringify({
+            title:product.title,
+            description:product.description,
+            code:product.code,
+            price:product.price,
+            thumbnail:product.thumbnail,
+            stock:product.stock,
+            timeStamp: product.timeStamp
+        })
+    })
+    alert("Producto Agregado Correctamente")
+}

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     surname: {type: String},
     address: {type: String},
     age: {type: Number},
-    phone: {type: Number},
+    phone: {type: String},
     isAdmin:{type: Boolean},
     cartId:{type:Number}
   }
@@ -49,6 +49,12 @@ class MongoUser {
     } catch (err){
       console.log(err);
     }
+  }
+
+  async modifyUserCartId (username, newCartId) {
+    const user = await this.findUser(username);
+    user.cartId = newCartId
+    await this.collection.updateOne({id:user.id},{$set:{...user}})
   }
 }
 

@@ -1,7 +1,7 @@
 <div class="loginSuccessful container">
     <h1 class="welcome"> Bienvenido/a {{this.username}}</h1>
     <img src="avatars/{{this.username}}.jpeg" alt="profile picture" class="imgAvatar">
-    <i class="fas fa-shopping-cart cartIcon"></i>
+    <a href="/api/carrito/{{this.cartId}}/productos" class="btn btn-primary"><span> Ver Carrito </span><i class="fas fa-shopping-cart cartIcon"></i></a>
     <a href="/logout" class="btn btn-warning my-3">Desloguear</a>
 </div>
 <div class="userData container">
@@ -49,9 +49,9 @@
                         {{#if products}}
                             {{#each products}}
                                 <tr class="d-flex justify-content-between">
-                                    <td style="margin-bottom: 20px; width:33.3%">{{this.name}}</td>
+                                    <td style="margin-bottom: 20px; width:33.3%">{{this.title}}</td>
                                     <td style="margin-bottom: 20px; width:33.3%">${{price}}</td>
-                                    <td style="margin-bottom: 20px; width:28.3%"><img src={{thumbnail}} alt={{name}} height="150" width="200"></td>
+                                    <td style="margin-bottom: 20px; width:28.3%"><img src={{thumbnail}} alt={{title}} height="150" width="200"></td>
                                     <td style="margin-bottom: 20px; width:5%"><button class="addToCart">+</button></td>
                                 </tr>
                             {{/each}}

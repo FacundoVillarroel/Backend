@@ -21,7 +21,7 @@ class DaoFirebaseCarts extends FirebaseContainer {
     item.id = DaoFirebaseCarts.idCounter
     const cartToAdd = this.query.doc(`${DaoFirebaseCarts.idCounter}`);
     await cartToAdd.create(item)
-    
+    return item.id
   }
 
   async deleteById (id){

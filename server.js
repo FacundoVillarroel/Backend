@@ -9,7 +9,8 @@ const express = require ("express");
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
-const Contenedor = require ("./src/utils/classConstructor");
+/* const Contenedor = require ("./src/utils/classConstructor"); */
+const {DaoProduct} = require("./src/daos/index");
 const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
 const session = require("express-session");
@@ -17,7 +18,7 @@ const passport = require("./passport");
 const cookieParser = require("cookie-parser");
 const compression = require ("compression")
 
-const {mysqlOptions} = require ("./src/utils/config");
+/* const {mysqlOptions} = require ("./src/utils/config"); */
 const loginCheck = require("./middelwares/loginCheck");
 const routes = require("./src/routes/routes");
 
@@ -28,7 +29,8 @@ const numCPU = os.cpus().length;
 const logger = require ( "./src/logger");
 const logInfo = require( "./middelwares/logInfo")
 
-const productsList = new Contenedor (mysqlOptions,"products");
+/* const productsList = new Contenedor (mysqlOptions,"products"); */
+const productsList = new DaoProduct();
 const messagesList = new DaoFirebaseMessages();
 
 const app = express ();
@@ -102,7 +104,7 @@ io.on("connection", async (socket) => {
     }
 
     socket.emit("messages", await messagesList.normalize());
-    socket.emit("products", mocks);
+    socket.emit("products", await productsList.getAll());
 
     socket.on("new_message",async (message) => {
         await messagesList.save(message)

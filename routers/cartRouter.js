@@ -13,7 +13,7 @@ cartRouter.get("/:id/productos", async ( req, res ) => {
   try{
     const id = parseInt(req.params.id);
     const cart = await carts.getById(id);
-    res.send(cart.products);
+    res.render("cartProducts", {products: cart.products});
   } catch (err){
     if(err) logger.error(`Error: ${err}`)
   }
@@ -25,8 +25,8 @@ cartRouter.post("/", async ( req, res ) => {
       timeStamp:Date(),
       products:[]
     }
-    await carts.save(newCart);
-    res.send("Carrito creado correctamente")
+    const newCartId = (await carts.save(newCart));
+    res.send({id:newCartId})
   } catch (err){
     if(err) logger.error(`Error: ${err}`)
   }

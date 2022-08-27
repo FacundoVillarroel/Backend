@@ -1,6 +1,5 @@
 const MongoUsers = require ("../mongoose")
 
-
 const getLogin = ( req, res ) => {
   if (req.isAuthenticated()) res.redirect("/productos")
   else res.render("login", {})
@@ -29,8 +28,8 @@ const getFailRegister = ( req, res ) => {
 
 const getProductos = async (req,res)=>{
   const user = (await MongoUsers.findUser(req.session.passport.user))[0]
-  const { username, email, name, surname, address, age, phone, isAdmin } = user
-  res.render("main", {username, email, name, surname, address, age, phone, isAdmin, products:"products"})
+  const { username, email, name, surname, address, age, phone, isAdmin, cartId } = user
+  res.render("main", {username, email, name, surname, address, age, phone, isAdmin, cartId, products:"products"})
 }
 
 const getLogout = async ( req, res, next) => {

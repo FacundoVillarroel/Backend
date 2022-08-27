@@ -96,6 +96,7 @@ input {
 .userData{
     background-color: #94d9c3;
     padding: 20px;
+    margin-bottom: 32px;
 }
 .addToCart{
     border: transparent;
@@ -104,6 +105,6 @@ input {
     color: #343a40;
 }
 .cartIcon{
-    color: white;
+    color: black;
     font-size: 30px;
 }
