@@ -13,7 +13,7 @@ cartRouter.get("/:id/productos", async ( req, res ) => {
   try{
     const id = parseInt(req.params.id);
     const cart = await carts.getById(id);
-    res.render("cartProducts", {products: cart.products});
+    res.send(cart);
   } catch (err){
     if(err) logger.error(`Error: ${err}`)
   }
@@ -72,4 +72,4 @@ cartRouter.delete("/:id/productos/:id_prod", async ( req, res) => {
   }
 }) 
 
-module.exports = { cartRouter }
+module.exports = { cartRouter, carts }

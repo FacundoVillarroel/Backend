@@ -50,6 +50,8 @@ const upload = multer({
         }
     })
 })
+const transport = require("./src/utils/transport")
+const client = require("./twilio.js")
 
 app.use(favicon(__dirname + "/public/images/favicon.ico"))
 app.use(express.json());
@@ -116,6 +118,42 @@ io.on("connection", async (socket) => {
         await productsList.save(product)
         io.sockets.emit("products", await productsList.getAll())
     })
+
+    socket.on("new_purchase", async (details) => {
+        const {cart, username, email, phone} = details
+        let li = ""
+        cart.products.forEach(product => {
+            li = li + `<li>${product.title} </li>`
+        });
+
+        transport.sendMail({
+            from: "Facundo <facu.villarroel96@gmail.com>",
+            to:process.env.GMAIL_USER,
+            html:`<h1>List of items:</h1>
+                    <ul> 
+                        ${li}
+                    </ul>`,
+            subject:`New Purchase from the User: ${username}, Email: ${email}`
+        }).then((data)=> {
+            console.log("Email enviado");
+        }).catch(console.log)
+        
+        client.messages.create({
+            to:`whatsapp:${phone}`,
+            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+            body: `New Purchase from the User: ${username}, Email: ${email}`
+        }).then((data) => {
+            console.log("Whatsapp enviado correctamente");
+        }).catch(console.log)
+        
+        client.messages.create({
+            to: phone,
+            from:process.env.TWILIO_PHONE_NUMBER,
+            body:"Your purchase has been recieved"
+        }).then((data) => {
+            console.log("Mensaje de texto enviado correctamente");
+        }).catch(console.log)
+    })
 })
 
 app.get("/info", compression(), ( req, res ) => {
@@ -163,6 +201,8 @@ app.get("/failRegister", routes.getFailRegister)
 
 app.get("/productos", loginCheck, routes.getProductos)
 
+app.get("/user/cart", loginCheck, routes.getUserCart)
+
 app.get("/logout", routes.getLogout)
 
 app.get("/api/productos-test", ( req, res) => {
@@ -173,8 +213,8 @@ app.get("/api/productos-test", ( req, res) => {
     res.render("main", {products:mocks});
 })
 
-app.use("/api/productos", productRouter);
-app.use("/api/carrito", cartRouter);
+app.use("/api/productos", loginCheck, productRouter);
+app.use("/api/carrito", loginCheck, cartRouter);
 app.use("/api/randoms", randomsRouter);
 
 app.use((req, res) => {

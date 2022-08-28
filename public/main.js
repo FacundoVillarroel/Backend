@@ -1,4 +1,4 @@
-const socket = io()
+const socket = io();
 
 const authorSchema = new normalizr.schema.Entity("authors",{},{idAttribute:"email"})
 const messageSchema = new normalizr.schema.Entity("messages",{
@@ -25,34 +25,10 @@ const sendMessage = () => {
     return false
 }
 
-const sendProduct = () => {
-    const name = document.querySelector('#name').value;
-    const code = document.querySelector("#code").value;
-    const description = document.querySelector("#description").value;
-    const price = document.querySelector('#price').value;
-    const stock = document.querySelector('#stock').value;
-    const thumbnail = document.querySelector('#thumbnail').value;
-    const product = {name, code, price, thumbnail}
-    socket.emit("new_product", product);
-    return false
-}
-
 const createTagMessage = (message) => {
     const {author, text, timeStamp} = message;
     return (`
         <p><span class="email">${author.alias}</span><span class="date">${timeStamp} :</span><span class="text">${text}</span><span><img class="imgAvatar" src= ${author.avatar} alt= ${author.name} ${author.surname}/></span></p>
-    `)
-}
-
-const createTagProduct = (product) => {
-    const {id, title, price, thumbnail} = product;
-    return(`
-    <tr class="d-flex justify-content-between">
-        <td style="margin-bottom: 20px; width:33.3%">${title}</td>
-        <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
-        <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${title}" height="150" width="200"></td>
-        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success" onclick='return addToCart("${id}")'>+</button></td>
-    </tr>
     `)
 }
 
@@ -74,12 +50,48 @@ const addMessage = (normalizedMessages) => {
     createTagCompressionPercentage(normalizedMessages, denormalizedMessages);
 }
 
+const sendProduct = () => {
+    const name = document.querySelector('#name').value;
+    const code = document.querySelector("#code").value;
+    const description = document.querySelector("#description").value;
+    const price = document.querySelector('#price').value;
+    const stock = document.querySelector('#stock').value;
+    const thumbnail = document.querySelector('#thumbnail').value;
+    const product = {name, code, price, thumbnail}
+    socket.emit("new_product", product);
+    return false
+}
+
+const createTagProduct = (product) => {
+    const {id, title, price, thumbnail} = product;
+    return(`
+    <tr class="d-flex justify-content-between">
+        <td style="margin-bottom: 20px; width:33.3%">${title}</td>
+        <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
+        <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${title}" height="150" width="200"></td>
+        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success" onclick='return addToCart("${id}")'>+</button></td>
+    </tr>
+    `)
+}
+
+
 const addProduct = (products) => {
     const allProducts = products.map(product => createTagProduct(product)).join(" ");
     const productContainer = document.querySelector("#productContainer");
     if (productContainer) productContainer.innerHTML = allProducts;
 }
 
+const newPurchase = async (cartId, username, email, phone) => {
+    const baseUrl = window.location.origin
+    const cart = await (await fetch(`${baseUrl}/api/carrito/${cartId}/productos`)).json()
+    const details = {
+        cart:cart,
+        username:username,
+        email:email,
+        phone:phone
+    }
+    socket.emit("new_purchase", details)
+}
 
 socket.on('messages', (normalizedMessages) => addMessage(normalizedMessages));
 socket.on("products", (products) => addProduct(products))

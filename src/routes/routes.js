@@ -1,4 +1,5 @@
-const MongoUsers = require ("../mongoose")
+const MongoUsers = require ("../mongoose");
+const { carts } = require("../../routers/cartRouter")
 
 const getLogin = ( req, res ) => {
   if (req.isAuthenticated()) res.redirect("/productos")
@@ -32,6 +33,13 @@ const getProductos = async (req,res)=>{
   res.render("main", {username, email, name, surname, address, age, phone, isAdmin, cartId, products:"products"})
 }
 
+const getUserCart = async ( req, res ) => {
+  const user = (await MongoUsers.findUser(req.session.passport.user))[0]
+  const {cartId, username, email, phone} = user
+  const cart = await carts.getById(cartId)
+  res.render("cartProducts", {products: cart.products, cartId, username, email, phone})
+}
+
 const getLogout = async ( req, res, next) => {
   const username = req.user.username
   req.logout(function(err){
@@ -49,5 +57,6 @@ module.exports = {
   getFailLogin,
   getFailRegister,
   getProductos,
-  getLogout
+  getLogout,
+  getUserCart
 }
