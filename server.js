@@ -214,7 +214,7 @@ app.get("/api/productos-test", ( req, res) => {
 })
 
 app.use("/api/productos", loginCheck, productRouter);
-app.use("/api/carrito", loginCheck, cartRouter);
+app.use("/api/carrito", cartRouter);
 app.use("/api/randoms", randomsRouter);
 
 app.use((req, res) => {
@@ -224,18 +224,17 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || args.port;
 
-if ( args.modo == "cluster") {
+if ( process.env.MODE == "cluster") {
     if(cluster.isPrimary) {
         for (let i = 0; i < numCPU; i++){
             cluster.fork()
         }
     } else {
-        httpServer.listen( PORT, () => {})
+        httpServer.listen(PORT, () => {})
     }
-}
-
-if (args.modo == "fork") {
+} else {
     httpServer.listen(PORT, () => {
         console.log(`Escuchando en el puerto ${httpServer.address().port}`);
     })
 }
+

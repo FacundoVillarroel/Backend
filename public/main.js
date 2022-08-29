@@ -69,9 +69,10 @@ const createTagProduct = (product) => {
         <td style="margin-bottom: 20px; width:33.3%">${title}</td>
         <td style="margin-bottom: 20px; width:33.3%">$${price}</td>
         <td style="margin-bottom: 20px; width:28.3%"><img src="${thumbnail}" alt="${title}" height="150" width="200"></td>
-        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success" onclick='return addToCart("${id}")'>+</button></td>
+        <td style="margin-bottom: 20px; width:5%"><button class="addToCart btn btn-success" onclick="return addToCart('${id}','6')">+</button></td>
     </tr>
     `)
+    /* the second parameter of onclick function shouldn't be hardcoded */
 }
 
 
@@ -91,14 +92,15 @@ const newPurchase = async (cartId, username, email, phone) => {
         phone:phone
     }
     socket.emit("new_purchase", details)
+    alert("Compra realizada correctamente")
 }
 
 socket.on('messages', (normalizedMessages) => addMessage(normalizedMessages));
 socket.on("products", (products) => addProduct(products))
 
-const addToCart = async (id) =>{
-    const product = await (await fetch(`api/productos/${id}`)).json();
-    await fetch("/api/carrito/1/productos", {
+const addToCart = async (productId,cartId) =>{
+    const product = await (await fetch(`api/productos/${productId}`)).json();
+    await fetch(`/api/carrito/${cartId}/productos`, {
         headers:{
             'Content-Type': 'application/json'
         },

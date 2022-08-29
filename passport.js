@@ -1,8 +1,9 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
-const MongoUsers = require ("./src/mongoose")
-const transport = require("./src/utils/transport")
+const MongoUsers = require ("./src/mongoose");
+const transport = require("./src/utils/transport");
+const axios = require('axios');
 
 const strategyOptions = {
   usernameField: "username",
@@ -12,11 +13,15 @@ const strategyOptions = {
 
 passport.use('registracion', new LocalStrategy( strategyOptions, async (req, username, password, callback) => {
   const { email, name, surname, address, age, phone } = req.body;
+  let cartId = ""
 
   const user = (await MongoUsers.findUser(username))[0]
   if (user) {return callback()}
   const passwordHasheado = bcrypt.hashSync(password, bcrypt.genSaltSync(10)); 
-  const newUser = { username, password: passwordHasheado, email, name, surname, address, age, phone };
+  //CREATES A NEW EMPTY CART FOR THE NEW USER
+  const response = await axios.post(`${req.protocol}://${req.headers.host}/api/carrito/`)
+  cartId = await response.data.id
+  const newUser = { username, password: passwordHasheado, email, name, surname, address, age, phone, cartId };
   MongoUsers.addUser(newUser)
 
   transport.sendMail({
