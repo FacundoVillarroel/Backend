@@ -3,8 +3,8 @@ const log4js = require("log4js");
 log4js.configure({
   appenders:{
     console: {type: "console"},
-    warnFile: { type: "file", filename: "warn.log"},
-    errorFile: { type: "file", filename: "error.log"},
+    warnFile: { type: "file", filename: "./logs/warn.log"},
+    errorFile: { type: "file", filename: "./logs/error.log"},
     soloWarn: {type: "logLevelFilter", appender: "warnFile", level: "warn"},
     soloError: {type: "logLevelFilter", appender: "errorFile", level: "error"},
   },

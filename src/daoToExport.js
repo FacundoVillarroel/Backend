@@ -1,12 +1,12 @@
-const DaoFileCarts = require("./carts/DaoFileCarts");
-const DaoMemoryCarts = require("./carts/DaoMemoryCarts");
-const DaoMongoDbCarts = require("./carts/DaoMongoDbCarts");
-const DaoFirebaseCarts = require("./carts/DaoFirebaseCarts");
+const DaoFileCarts = require("../carts/daos/DaoFileCarts");
+const DaoMemoryCarts = require("../carts/daos/DaoMemoryCarts");
+const DaoMongoDbCarts = require("../carts/daos/DaoMongoDbCarts");
+const DaoFirebaseCarts = require("../carts/daos/DaoFirebaseCarts");
 
-const DaoFileProducts = require ("./products/DaoFileProducts");
-const DaoMemoryProducts = require ("./products/DaoMemoryProducts");
-const DaoMongoDbProducts = require ("./products/DaoMongoDbProducts");
-const DaoFirebaseProducts = require ("./products/DaoFirebaseProducts");
+const DaoFileProducts = require ("../productsAndChat/daos/DaoFileProducts");
+const DaoMemoryProducts = require ("../productsAndChat/daos/DaoMemoryProducts");
+const DaoMongoDbProducts = require ("../productsAndChat/daos/DaoMongoDbProducts");
+const DaoFirebaseProducts = require ("../productsAndChat/daos/DaoFirebaseProducts");
 
 let containerToExportProduct = "";
 let containerToExportCart = "";

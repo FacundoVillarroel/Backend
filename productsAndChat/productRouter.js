@@ -6,8 +6,8 @@ productRouter.use(express.urlencoded({extended:true}));
 
 //import ("../src/daos/index").then(data => {data.DaoProduct})
 
-const {DaoProduct} = require ("../src/daos/index");
-const logger = require("../src/logger");
+const {DaoProduct} = require ("../src/daoToExport");
+const logger = require("../logs/logger");
 const products = new DaoProduct();
 
 productRouter.get("/:id?", async (req, res) => {

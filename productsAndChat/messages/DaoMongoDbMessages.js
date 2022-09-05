@@ -1,5 +1,5 @@
 const mongoose = require ("mongoose");
-const MongoDbContainer = require ("../../containers/MongoDbContainer.js");
+const MongoDbContainer = require ("../../src/containers/MongoDbContainer.js");
 const norm = require ("normalizr");
 
 const messageSchema = new mongoose.Schema({

@@ -1,6 +1,6 @@
-const FirebaseContainer = require("../../containers/FirebaseContainer.js");
+const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
 const normalizr = require ("normalizr");
-const messagesListSchema = require("../../utils/normalizrSchemas") 
+const messagesListSchema = require("../normalizrSchemas") 
 
 class DaoFirebaseMessages extends FirebaseContainer {
 

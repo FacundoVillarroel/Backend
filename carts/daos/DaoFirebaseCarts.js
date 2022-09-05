@@ -1,4 +1,4 @@
-const FirebaseContainer = require("../../containers/FirebaseContainer.js");
+const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
 
 class DaoFirebaseCarts extends FirebaseContainer {
   static idCounter = 0

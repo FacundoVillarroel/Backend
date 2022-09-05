@@ -9,11 +9,10 @@ const express = require ("express");
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
-const {DaoProduct} = require("./src/daos/index");
-const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
-const {faker} = require ("@faker-js/faker");
+const {DaoProduct} = require("./src/daoToExport");
+const DaoFirebaseMessages = require ("./productsAndChat/messages/DaoFirebaseMessages.js");
 const session = require("express-session");
-const passport = require("./passport");
+const passport = require("./loginAndRegister/passport");
 const cookieParser = require("cookie-parser");
 const compression = require ("compression")
 
@@ -21,20 +20,22 @@ const loginCheck = require("./middelwares/loginCheck");
 const routes = require("./src/routes/routes");
 
 const cluster = require("cluster");
+
 const os = require("os");
 const numCPU = os.cpus().length;
+const getinfo = require("./info/info")
 
-const logger = require ( "./src/logger");
-const logInfo = require( "./middelwares/logInfo")
+const logger = require ( "./logs/logger");
+const logInfo = require( "./logs/logInfo")
 
 const productsList = new DaoProduct();
 const messagesList = new DaoFirebaseMessages();
 
 const app = express ();
 
-const { productRouter } = require ("./routers/productRouter");
-const { cartRouter } = require ("./routers/cartRouter");
-const { randomsRouter } = require("./routers/randoms");
+const { productRouter } = require ("./productsAndChat/productRouter");
+const { cartRouter } = require ("./carts/cartRouter");
+const { randomsRouter } = require("./randomNumbers/randoms");
 
 const multer = require("multer");
 /* const mimeTypes = require("mime-types") */
@@ -47,7 +48,7 @@ const upload = multer({
         }
     })
 })
-const handleNewPurchase = require("./src/utils/handleNewPurchase")
+const handleNewPurchase = require("./productsAndChat/handleNewPurchase")
 
 app.use(favicon(__dirname + "/public/images/favicon.ico"))
 app.use(express.json());
@@ -88,18 +89,7 @@ app.set("view engine", "hbs");
 const httpServer = new HTTPServer (app);
 const io = new IOServer (httpServer);
 
-const armarMock = () => {
-    return {
-        name: faker.vehicle.vehicle(),
-        price: faker.random.numeric(7),
-        thumbnail:faker.image.transport(200, 150, true)
-    }
-}
 io.on("connection", async (socket) => {
-    const mocks = [];
-    for (let i = 0; i < 5; i++){
-        mocks.push(armarMock())
-    }
 
     socket.emit("messages", await messagesList.normalize());
     socket.emit("products", await productsList.getAll());
@@ -121,36 +111,7 @@ io.on("connection", async (socket) => {
     })
 })
 
-app.get("/info", compression(), ( req, res ) => {
-    const info= {
-        args: args,
-        sistema:process.platform,
-        nodeVersion: process.version,
-        memory: process.memoryUsage.rss(),
-        path: process.cwd(),
-        processId:process.pid,
-        file:__dirname,
-        CPUS: os.cpus().length
-    }
-    info.keys= Object.keys(info.args)
-    res.render("info", {info:info})
-})
-
-app.get("/infoConsole", compression(), ( req, res ) => {
-    const info= {
-        args: args,
-        sistema:process.platform,
-        nodeVersion: process.version,
-        memory: process.memoryUsage.rss(),
-        path: process.cwd(),
-        processId:process.pid,
-        file:__dirname,
-        CPUS: os.cpus().length
-    }
-    info.keys= Object.keys(info.args)
-    console.log(info);
-    res.render("info", {info:info})
-})
+app.get("/info", compression(), getinfo)
 
 app.get("/login" , routes.getLogin)
 
@@ -169,14 +130,6 @@ app.get("/productos", loginCheck, routes.getProductos)
 app.get("/user/cart", loginCheck, routes.getUserCart)
 
 app.get("/logout", routes.getLogout)
-
-app.get("/api/productos-test", ( req, res) => {
-    const mocks = [];
-    for (let i = 0; i < 5; i++){
-        mocks.push(armarMock())
-    }
-    res.render("main", {products:mocks});
-})
 
 app.use("/api/productos", loginCheck, productRouter);
 app.use("/api/carrito", cartRouter);

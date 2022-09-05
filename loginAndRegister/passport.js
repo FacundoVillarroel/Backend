@@ -1,8 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
-const MongoUsers = require ("./src/mongoose");
-const transport = require("./src/utils/transport");
+const MongoUsers = require ("./persistence");
+const transport = require("../productsAndChat/transport");
 const axios = require('axios');
 
 const strategyOptions = {

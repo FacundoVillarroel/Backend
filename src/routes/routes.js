@@ -1,5 +1,5 @@
-const MongoUsers = require ("../mongoose");
-const { carts } = require("../../routers/cartRouter")
+const { carts } = require("../../carts/cartRouter")
+const getUser = require("../../loginAndRegister/service")
 
 const getLogin = ( req, res ) => {
   if (req.isAuthenticated()) res.redirect("/productos")
@@ -27,14 +27,14 @@ const getFailRegister = ( req, res ) => {
   res.render("failRegister", {})
 }
 
-const getProductos = async (req,res)=>{
-  const user = (await MongoUsers.findUser(req.session.passport.user))[0]
+const getProductos = (req,res)=>{
+  const user = getUser(req.session.passport.user)
   const { username, email, name, surname, address, age, phone, isAdmin, cartId } = user
   res.render("main", {username, email, name, surname, address, age, phone, isAdmin, cartId, products:"products"})
 }
 
 const getUserCart = async ( req, res ) => {
-  const user = (await MongoUsers.findUser(req.session.passport.user))[0]
+  const user = await getUser(req.session.passport.user)
   const {cartId, username, email, phone} = user
   const cart = await carts.getById(cartId)
   res.render("cartProducts", {products: cart.products, cartId, username, email, phone})

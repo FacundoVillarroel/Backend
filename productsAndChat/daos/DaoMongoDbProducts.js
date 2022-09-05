@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const MongoDbContainer = require ("../../containers/MongoDbContainer.js");
+const MongoDbContainer = require ("../../src/containers/MongoDbContainer.js");
 
 const prodSchema = new mongoose.Schema({
   id: {type: Number, require:true, unique:true},
