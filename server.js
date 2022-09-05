@@ -9,7 +9,6 @@ const express = require ("express");
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
-/* const Contenedor = require ("./src/utils/classConstructor"); */
 const {DaoProduct} = require("./src/daos/index");
 const DaoFirebaseMessages = require ("./src/daos/messages/DaoFirebaseMessages.js");
 const {faker} = require ("@faker-js/faker");
@@ -18,7 +17,6 @@ const passport = require("./passport");
 const cookieParser = require("cookie-parser");
 const compression = require ("compression")
 
-/* const {mysqlOptions} = require ("./src/utils/config"); */
 const loginCheck = require("./middelwares/loginCheck");
 const routes = require("./src/routes/routes");
 
@@ -29,7 +27,6 @@ const numCPU = os.cpus().length;
 const logger = require ( "./src/logger");
 const logInfo = require( "./middelwares/logInfo")
 
-/* const productsList = new Contenedor (mysqlOptions,"products"); */
 const productsList = new DaoProduct();
 const messagesList = new DaoFirebaseMessages();
 
@@ -50,8 +47,7 @@ const upload = multer({
         }
     })
 })
-const transport = require("./src/utils/transport")
-const client = require("./twilio.js")
+const handleNewPurchase = require("./src/utils/handleNewPurchase")
 
 app.use(favicon(__dirname + "/public/images/favicon.ico"))
 app.use(express.json());
@@ -121,38 +117,7 @@ io.on("connection", async (socket) => {
 
     socket.on("new_purchase", async (details) => {
         const {cart, username, email, phone} = details
-        let li = ""
-        cart.products.forEach(product => {
-            li = li + `<li>${product.title} </li>`
-        });
-
-        transport.sendMail({
-            from: "Facundo <facu.villarroel96@gmail.com>",
-            to:process.env.GMAIL_USER,
-            html:`<h1>List of items:</h1>
-                    <ul> 
-                        ${li}
-                    </ul>`,
-            subject:`New Purchase from the User: ${username}, Email: ${email}`
-        }).then((data)=> {
-            console.log("Email enviado");
-        }).catch(console.log)
-        
-        client.messages.create({
-            to:`whatsapp:${phone}`,
-            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-            body: `New Purchase from the User: ${username}, Email: ${email}`
-        }).then((data) => {
-            console.log("Whatsapp enviado correctamente");
-        }).catch(console.log)
-        
-        client.messages.create({
-            to: phone,
-            from:process.env.TWILIO_PHONE_NUMBER,
-            body:"Your purchase has been recieved"
-        }).then((data) => {
-            console.log("Mensaje de texto enviado correctamente");
-        }).catch(console.log)
+        handleNewPurchase(cart, username, email, phone)
     })
 })
 
