@@ -9,19 +9,11 @@ productRouter.use(express.urlencoded({extended:true}));
 const {DaoProduct} = require ("../src/daoToExport");
 const logger = require("../logs/logger");
 const products = new DaoProduct();
+const {getProduct} = require("./service")
 
-productRouter.get("/:id?", async (req, res) => {
-  try{
-    const id = parseInt(req.params.id);
-    if (id){
-      const prodFound = await products.getById(id)
-        prodFound ? res.send(prodFound) : (function(){throw new Error("No existe producto con ese ID")}()) 
-    } else {
-        res.send (await products.getAll())
-    }
-  } catch (err){
-    if(err) logger.error(`Error: ${err}`)
-  }
+productRouter.get("/:id?", (req, res) => {
+  const id = parseInt(req.params.id);
+  getProduct(id)
   
 })
 
@@ -74,7 +66,6 @@ productRouter.delete('/:idNumber', ( req, res ) => {
   } catch (err){
     if(err) logger.error(`Error: ${err}`)
   }
-
 })
 
 module.exports = { productRouter }

@@ -15,7 +15,7 @@ passport.use('registracion', new LocalStrategy( strategyOptions, async (req, use
   const { email, name, surname, address, age, phone } = req.body;
   let cartId = ""
 
-  const user = (await MongoUsers.findUser(username))[0]
+  const user = await MongoUsers.findUser(username)
   if (user) {return callback()}
   const passwordHasheado = bcrypt.hashSync(password, bcrypt.genSaltSync(10)); 
   //CREATES A NEW EMPTY CART FOR THE NEW USER
@@ -43,7 +43,7 @@ passport.use('registracion', new LocalStrategy( strategyOptions, async (req, use
 }));
 
 passport.use('autenticacion', new LocalStrategy(async (username, password, callback) => {
-  const user = (await MongoUsers.findUser(username))[0]
+  const user = await MongoUsers.findUser(username)
   if (!user || !bcrypt.compareSync(password, user.password)) return callback();
   callback(null, user);
 }));
@@ -53,7 +53,7 @@ passport.serializeUser((user, callback) => {
 });
 
 passport.deserializeUser(async (username, callback) => {
-  const user = (await MongoUsers.findUser(username))[0]
+  const user = await MongoUsers.findUser(username)
   callback(null, user);
 });
 

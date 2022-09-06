@@ -4,12 +4,12 @@ const FileContainer = require("../../src/containers/FileContainer.js")
 
 class DaoFileProducts extends FileContainer {
 
-  constructor() {
+constructor() {
     super("products.txt");
     this.arrayProducts= [];
-  }
+}
 
-  async prevContent (){
+async prevContent (){
     try{
         this.arrayProducts = JSON.parse(await fs.promises.readFile(this.fileName,"utf-8"))
         let lastIdNumber = this.arrayProducts[this.arrayProducts.length -1].id

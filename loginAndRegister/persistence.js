@@ -44,7 +44,7 @@ class MongoUser {
   async findUser (username) {
     try{
       this.mongoConected()
-      const user = this.model.find({username:username})
+      const user = (await this.model.find({username:username}))[0]
       return user
     } catch (err){
       console.log(err);
