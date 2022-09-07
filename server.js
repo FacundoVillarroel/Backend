@@ -131,7 +131,7 @@ app.get("/user/cart", loginCheck, routes.getUserCart)
 
 app.get("/logout", routes.getLogout)
 
-app.use("/api/productos", loginCheck, productRouter);
+app.use("/api/productos", productRouter);
 app.use("/api/carrito", cartRouter);
 app.use("/api/randoms", randomsRouter);
 

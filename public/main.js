@@ -51,13 +51,13 @@ const addMessage = (normalizedMessages) => {
 }
 
 const sendProduct = () => {
-    const name = document.querySelector('#name').value;
+    const title = document.querySelector('#title').value;
     const code = document.querySelector("#code").value;
     const description = document.querySelector("#description").value;
     const price = document.querySelector('#price').value;
     const stock = document.querySelector('#stock').value;
     const thumbnail = document.querySelector('#thumbnail').value;
-    const product = {name, code, price, thumbnail}
+    const product = {title, code, price, thumbnail}
     socket.emit("new_product", product);
     return false
 }

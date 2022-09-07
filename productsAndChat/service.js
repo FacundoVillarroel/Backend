@@ -1,17 +1,53 @@
 const {DaoProduct} = require ("../src/daoToExport");
 const products = new DaoProduct();
+const logger = require("../logs/logger")
 
-const getProduct = async (id) => {
+const getAllProducts = async () => {
   try{
-    if (id){
-      const prodFound = await products.getById(id)
-        prodFound ? res.send(prodFound) : (function(){throw new Error("No existe producto con ese ID")}()) 
-    } else {
-        res.send (await products.getAll())
-    }
-  } catch (err){
-    if(err) logger.error(`Error: ${err}`)
+    return (await products.getAll())
+  }catch(err){
+    logger.error(`Error: ${err}`)
   }
 }
 
-module.exports = {get}
+const getProduct = async (id) => {
+  try{
+      const prodFound = await products.getById(id)
+      if (prodFound) {
+        return prodFound
+      } else {
+        return function(){throw new Error("No existe producto con ese ID")}
+      }
+    }
+  catch (err){
+    logger.error(`Error: ${err}`)
+  }
+}
+
+const postProduct = async (productToAdd) => {
+  try{
+      return (await products.save(productToAdd))
+  } catch (err){
+    logger.error(`Error: ${err}`)
+  }
+}
+
+const putProduct = (id, productUpdate) => {
+  try{
+    products.modifyProduct(id,productUpdate)
+      .then(promise => {return promise});
+  } catch (err){
+    logger.error(`Error: ${err}`)
+  }
+}
+
+const deleteProduct = (id) => {
+  try{
+    products.deleteById(id)
+    .then(() => {return('Producto eliminado correctamente')})
+  } catch {
+    logger.error(`Error: ${err}`)
+  }
+}
+
+module.exports = { getAllProducts, getProduct, postProduct, putProduct, deleteProduct}

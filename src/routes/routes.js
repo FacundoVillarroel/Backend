@@ -27,8 +27,8 @@ const getFailRegister = ( req, res ) => {
   res.render("failRegister", {})
 }
 
-const getProductos = (req,res)=>{
-  const user = getUser(req.session.passport.user)
+const getProductos = async (req,res)=>{
+  const user = await getUser(req.session.passport.user)
   const { username, email, name, surname, address, age, phone, isAdmin, cartId } = user
   res.render("main", {username, email, name, surname, address, age, phone, isAdmin, cartId, products:"products"})
 }

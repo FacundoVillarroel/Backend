@@ -1,0 +1,2 @@
+[2022-09-07T23:29:23.945] [ERROR] development - Error: ReferenceError: res is not defined
+[2022-09-07T23:37:21.247] [ERROR] development - Error: TypeError: products.getAllProducts is not a function
