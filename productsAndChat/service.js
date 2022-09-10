@@ -1,4 +1,4 @@
-const {DaoProduct} = require ("../src/daoToExport");
+const {DaoProduct} = require ("../src/daoFactory");
 const {Product} = require("./product")
 const products = new DaoProduct();
 const logger = require("../logs/logger")

@@ -4,7 +4,7 @@ const cartRouter = express.Router();
 cartRouter.use(express.json());
 cartRouter.use(express.urlencoded({extended:true}));
 
-const {DaoCart} = require ("../src/daoToExport");
+const {DaoCart} = require ("../src/daoFactory");
 const logger = require("../logs/logger");
 
 const carts = new DaoCart();
