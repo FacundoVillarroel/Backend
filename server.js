@@ -99,9 +99,7 @@ io.on("connection", async (socket) => {
         io.sockets.emit("messages", await messagesList.normalize())
     })
 
-    socket.on("new_product", async (product) => {
-        product.timeStamp = new Date();
-        await productsList.save(product)
+    socket.on("new_product", async () => {
         io.sockets.emit("products", await productsList.getAll())
     })
 

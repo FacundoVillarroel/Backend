@@ -26,7 +26,6 @@ productRouter.post("/", async ( req, res ) => {
     thumbnail:req.body.thumbnail,
     stock:req.body.stock
   }
-  console.log("PROD TO ADD", productToAdd);
   if (productToAdd === undefined){res.status(400).send({error: "product no puede ser 'undefined'"})}
   else {
     const response = await postProduct(productToAdd)

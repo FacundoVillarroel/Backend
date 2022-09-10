@@ -50,15 +50,16 @@ const addMessage = (normalizedMessages) => {
     createTagCompressionPercentage(normalizedMessages, denormalizedMessages);
 }
 
-const sendProduct = () => {
+const sendProduct = async () => {
     const title = document.querySelector('#title').value;
     const code = document.querySelector("#code").value;
     const description = document.querySelector("#description").value;
     const price = document.querySelector('#price').value;
     const stock = document.querySelector('#stock').value;
     const thumbnail = document.querySelector('#thumbnail').value;
-    const product = {title, code, price, thumbnail}
-    socket.emit("new_product", product);
+    const product = {title,description,stock, code, price, thumbnail}
+    await postProduct(product)
+    socket.emit("new_product");
     return false
 }
 
@@ -113,6 +114,24 @@ const addToCart = async (productId,cartId) =>{
             thumbnail:product.thumbnail,
             stock:product.stock,
             timeStamp: product.timeStamp
+        })
+    })
+    alert("Producto Agregado Correctamente")
+}
+
+const postProduct = async (product) => {
+    await fetch("/api/productos/", {
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        method:"POST",
+        body: JSON.stringify({
+            title:product.title,
+            description:product.description,
+            code:product.code,
+            price:product.price,
+            thumbnail:product.thumbnail,
+            stock:product.stock
         })
     })
     alert("Producto Agregado Correctamente")

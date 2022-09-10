@@ -1,4 +1,5 @@
 const {DaoProduct} = require ("../src/daoToExport");
+const {Product} = require("./product")
 const products = new DaoProduct();
 const logger = require("../logs/logger")
 
@@ -26,7 +27,9 @@ const getProduct = async (id) => {
 
 const postProduct = async (productToAdd) => {
   try{
-      return (await products.save(productToAdd))
+    productToAdd.timeStamp = new Date();
+    const newProduct = new Product(productToAdd)
+    return (await products.save(newProduct))
   } catch (err){
     logger.error(`Error: ${err}`)
   }

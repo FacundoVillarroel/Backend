@@ -1,44 +1,39 @@
 const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
+const {Product} = require("../product")
 
-class DaoFirebaseProducts extends FirebaseContainer {
+class DaoFirebaseProducts {
   static idCounter = 0
   constructor() {
-    super("products")
+    this.firebaseClient = new FirebaseContainer("products")
   }
 
-  async save(item){
-    const allProducts = await this.query.get();
+  async save(product){
+    const allProducts = await this.firebaseClient.getAll()
     allProducts.forEach((product) => {
-      if(DaoFirebaseProducts.idCounter <= product.data().id){
-        DaoFirebaseProducts.idCounter = product.data().id +1;
+      if(DaoFirebaseProducts.idCounter <= product.id){
+        DaoFirebaseProducts.idCounter = product.id +1;
       }
     })
-    item.id = DaoFirebaseProducts.idCounter;
-    const productToAdd = this.query.doc(`${DaoFirebaseProducts.idCounter}`);
-    await productToAdd.create(item)
+    product.id = DaoFirebaseProducts.idCounter;
+    const productToAdd = product.toDto()
 
-    return `Producto Agregado Correctamente, id: ${item.id}`
+    return await this.firebaseClient.save(productToAdd.id, productToAdd)
   }
 
-  async getById(idNumber){   
-    const productFound = await (await this.query.doc(`${idNumber}`).get()).data();
-    return productFound
+  async getById(id){   
+    return this.firebaseClient.getById(id)
   }
 
   async getAll(){
-    const products = await this.query.get();
-    return products.docs.map(doc=> doc.data());
+    return await this.firebaseClient.getAll()
   }
 
-  async modifyProduct(idNumber,productUpdate) {
-    const productFound = await this.query.doc(`${idNumber}`)
-    await productFound.update({...productUpdate})
-    return ("Producto Modificado Correctamente")
+  async modifyProduct(id,productUpdate) {
+    return await this.firebaseClient.updateDoc(id,productUpdate)
   }
 
-  async deleteById(idNumber){
-    const productFound = await this.query.doc(`${idNumber}`)
-    await productFound.delete()
+  async deleteById(id){
+    return await this.firebaseClient.deleteById(id)
   }
 
   async deleteAll(){
