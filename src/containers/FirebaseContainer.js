@@ -15,10 +15,10 @@ class FirebaseContainer {
   }
 
   async save (id, item) {
-    const productToAdd = this.query.doc(`${id}`);
-    await productToAdd.create(item)
+    const itemToAdd = this.query.doc(`${id}`);
+    await itemToAdd.create(item)
 
-    return `Producto Agregado Correctamente, id: ${item.id}`
+    return `Agregado Correctamente, id: ${item.id}`
   }
 
   async getAll() {

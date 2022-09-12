@@ -56,3 +56,14 @@
 [2022-09-11T00:20:10.984] [WARN] development - Ruta: /123123 Método: GET No implementado
 [2022-09-11T00:20:46.309] [WARN] development - Ruta: /1231asdasd Método: GET No implementado
 [2022-09-11T00:42:40.978] [WARN] development - Ruta: /5555555 Método: GET No implementado
+[2022-09-12T22:28:47.788] [ERROR] development - Error: TypeError: products.getAll is not a function
+[2022-09-12T22:44:45.375] [ERROR] development - Error: ReferenceError: products is not defined
+[2022-09-12T22:45:21.898] [ERROR] development - Error: TypeError: this.products.getAll is not a function
+[2022-09-12T22:53:26.642] [WARN] development - Ruta: /api/carrito/3 Método: GET No implementado
+[2022-09-12T22:53:31.769] [WARN] development - Ruta: /api/carritos/3 Método: GET No implementado
+[2022-09-12T23:14:29.878] [ERROR] development - Error: TypeError: this.updateDoc is not a function
+[2022-09-12T23:15:24.118] [WARN] development - Ruta: /api/carrito/1/productos/2 Método: POST No implementado
+[2022-09-12T23:16:47.730] [WARN] development - Ruta: /api/carrito/5 Método: GET No implementado
+[2022-09-12T23:37:03.963] [ERROR] development - Error: TypeError: daoFactory.getById is not a function
+[2022-09-12T23:38:17.167] [ERROR] development - Error: ReferenceError: carts is not defined
+[2022-09-12T23:39:25.786] [ERROR] development - Error: TypeError: cart.data is not a function

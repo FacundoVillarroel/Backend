@@ -1,5 +1,4 @@
 const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
-const {Product} = require("../product")
 
 class DaoFirebaseProducts {
   static idCounter = 0

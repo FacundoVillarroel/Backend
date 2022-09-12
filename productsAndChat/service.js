@@ -1,56 +1,64 @@
-const {DaoProduct} = require ("../src/daoFactory");
+const {ProductDaoFactory} = require ("./daos/ProductDaoFactory");
 const {Product} = require("./product")
-const products = new DaoProduct();
 const logger = require("../logs/logger")
 
-const getAllProducts = async () => {
-  try{
-    return (await products.getAll())
-  }catch(err){
-    logger.error(`Error: ${err}`)
-  }
-}
+const daoFactory = new ProductDaoFactory()
 
-const getProduct = async (id) => {
-  try{
-      const prodFound = await products.getById(id)
-      if (prodFound) {
-        return prodFound
-      } else {
-        return function(){throw new Error("No existe producto con ese ID")}
-      }
+class ProductService {
+  constructor (type) {
+    this.products = daoFactory.create(type)
+  }
+
+  async getAllProducts() {
+    try{
+      return (await this.products.getAll())
+    }catch(err){
+      logger.error(`Error: ${err}`)
     }
-  catch (err){
-    logger.error(`Error: ${err}`)
   }
+
+  async getProduct(id) {
+    try{
+        const prodFound = await this.products.getById(id)
+        if (prodFound) {
+          return prodFound
+        } else {
+          return function(){throw new Error("No existe producto con ese ID")}
+        }
+      }
+    catch (err){
+      logger.error(`Error: ${err}`)
+    }
+  }
+
+  async postProduct (productToAdd) {
+    try{
+      productToAdd.timeStamp = new Date();
+      const newProduct = new Product(productToAdd)
+      return (await this.products.save(newProduct))
+    } catch (err){
+      logger.error(`Error: ${err}`)
+    }
 }
 
-const postProduct = async (productToAdd) => {
+putProduct (id, productUpdate) {
   try{
-    productToAdd.timeStamp = new Date();
-    const newProduct = new Product(productToAdd)
-    return (await products.save(newProduct))
-  } catch (err){
-    logger.error(`Error: ${err}`)
-  }
-}
-
-const putProduct = (id, productUpdate) => {
-  try{
-    products.modifyProduct(id,productUpdate)
+    this.products.modifyProduct(id,productUpdate)
       .then(promise => {return promise});
   } catch (err){
     logger.error(`Error: ${err}`)
   }
 }
 
-const deleteProduct = (id) => {
+async deleteProduct (id) {
   try{
-    products.deleteById(id)
+    this.products.deleteById(id)
     .then(() => {return('Producto eliminado correctamente')})
   } catch {
     logger.error(`Error: ${err}`)
   }
 }
 
-module.exports = { getAllProducts, getProduct, postProduct, putProduct, deleteProduct}
+}
+
+module.exports = ProductService
