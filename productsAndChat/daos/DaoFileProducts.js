@@ -2,6 +2,8 @@ const { error } = require("console");
 const fs = require ("fs")
 const FileContainer = require("../../src/containers/FileContainer.js")
 
+let instance = null;
+
 class DaoFileProducts extends FileContainer {
 
 constructor() {
@@ -95,6 +97,11 @@ async deleteAll(){
     catch(err){
         console.log("Error al eliminar todos los productos",err);
     }
+}
+
+getInstance(){
+    if (!instance) instance = new DaoFileProducts()
+    return instance
 }
 
 }

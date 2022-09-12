@@ -4,14 +4,14 @@ const messagesListSchema = require("../normalizrSchemas")
 
 class DaoFirebaseMessages extends FirebaseContainer {
 
-  static idCounter = 0;
+  static idCounter = 8;
 
   constructor() {
     super("messages");
   }
 
   async save(item) {
-    item.id = DaoFirebaseMessages.DaoFirebaseMessages.idCounter;
+    item.id = DaoFirebaseMessages.idCounter;
     const messageToAdd = this.query.doc(`${DaoFirebaseMessages.idCounter}`);
     await messageToAdd.create(item)
   }

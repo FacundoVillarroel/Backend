@@ -18,7 +18,8 @@ class CartService {
   }
   async save(newCart){
     try{
-      return (await this.carts.save(newCart));
+      const newCartInstance = new Cart(newCart)
+      return (await this.carts.save(newCartInstance));
     } catch (err){
       if(err) logger.error(`Error: ${err}`)
     }

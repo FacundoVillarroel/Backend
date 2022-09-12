@@ -12,6 +12,8 @@ const prodSchema = new mongoose.Schema({
   code:{type:String}
 })
 
+let instance = null;
+
 class DaoMongoDbProducts extends MongoDbContainer {
 
   constructor() {
@@ -47,6 +49,10 @@ class DaoMongoDbProducts extends MongoDbContainer {
     await this.collection.deleteMany()
   }
 
+  getInstance(){
+    if (!instance) instance = new DaoMongoDbProducts()
+    return instance
+}
 
 }
 

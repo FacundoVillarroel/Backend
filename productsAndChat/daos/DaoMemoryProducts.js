@@ -1,5 +1,7 @@
 const MemoryContainer = require("../../src/containers/MemoryContainer.js");
 
+let instance = null;
+
 class DaoMemoryProducts extends MemoryContainer {
   constructor() {
     super();
@@ -35,6 +37,11 @@ class DaoMemoryProducts extends MemoryContainer {
     this.arrayInMemory = [];
     return ("Productos Eliminados Correctemente")
   }
+
+  getInstance(){
+    if (!instance) instance = new DaoMemoryProducts()
+    return instance
+}
 
 }
 

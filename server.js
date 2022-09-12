@@ -9,8 +9,6 @@ const express = require ("express");
 const { engine } = require ("express-handlebars");
 const {Server: HTTPServer} = require ("http");
 const {Server: IOServer} = require ("socket.io");
-const {DaoProduct} = require("./src/daoFactory");
-const DaoFirebaseMessages = require ("./productsAndChat/messages/DaoFirebaseMessages.js");
 const session = require("express-session");
 const passport = require("./loginAndRegister/passport");
 const cookieParser = require("cookie-parser");
@@ -27,9 +25,6 @@ const getinfo = require("./info/info")
 
 const logger = require ( "./logs/logger");
 const logInfo = require( "./logs/logInfo")
-
-const productsList = new DaoProduct();
-const messagesList = new DaoFirebaseMessages();
 
 const app = express ();
 
@@ -48,7 +43,7 @@ const upload = multer({
         }
     })
 })
-const handleNewPurchase = require("./productsAndChat/handleNewPurchase")
+
 
 app.use(favicon(__dirname + "/public/images/favicon.ico"))
 app.use(express.json());
@@ -81,32 +76,17 @@ app.engine (
         extname:".hbs",
         defaultLayout:"index.hbs",
     })
-)
-
+    )
+    
 app.set("views","./hbs_views");
 app.set("view engine", "hbs");
 
 const httpServer = new HTTPServer (app);
 const io = new IOServer (httpServer);
+const ioFunction = require("./ioServer/io");
 
 io.on("connection", async (socket) => {
-
-    socket.emit("messages", await messagesList.normalize());
-    socket.emit("products", await productsList.getAll());
-
-    socket.on("new_message",async (message) => {
-        await messagesList.save(message)
-        io.sockets.emit("messages", await messagesList.normalize())
-    })
-
-    socket.on("new_product", async () => {
-        io.sockets.emit("products", await productsList.getAll())
-    })
-
-    socket.on("new_purchase", async (details) => {
-        const {cart, username, email, phone} = details
-        handleNewPurchase(cart, username, email, phone)
-    })
+    ioFunction(io, socket)
 })
 
 app.get("/info", compression(), getinfo)

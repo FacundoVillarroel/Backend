@@ -18,7 +18,9 @@ class DaoFirebaseCarts {
       }
     })
     item.id = DaoFirebaseCarts.idCounter
-    return await this.firebaseClient.save(item.id, item);
+    const itemDto = item.toDto()
+
+    return await this.firebaseClient.save(itemDto.id, itemDto);
   }
 
   async deleteById (id){

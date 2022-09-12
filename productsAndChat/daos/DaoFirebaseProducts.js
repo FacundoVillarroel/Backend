@@ -1,5 +1,7 @@
 const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
 
+let instance = null;
+
 class DaoFirebaseProducts {
   static idCounter = 0
   constructor() {
@@ -38,6 +40,11 @@ class DaoFirebaseProducts {
   async deleteAll(){
     
   }
+
+  static getInstance(){
+    if (!instance) instance = new DaoFirebaseProducts()
+    return instance
+}
 
 }
 

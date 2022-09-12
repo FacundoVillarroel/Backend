@@ -2,7 +2,7 @@ const {ProductDaoFactory} = require ("./daos/ProductDaoFactory");
 const {Product} = require("./product")
 const logger = require("../logs/logger")
 
-const daoFactory = new ProductDaoFactory()
+const daoFactory = ProductDaoFactory.getInstance()
 
 class ProductService {
   constructor (type) {
