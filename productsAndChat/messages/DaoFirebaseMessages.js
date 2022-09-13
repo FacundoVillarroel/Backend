@@ -2,30 +2,24 @@ const FirebaseContainer = require("../../src/containers/FirebaseContainer.js");
 const normalizr = require ("normalizr");
 const messagesListSchema = require("../normalizrSchemas") 
 
-class DaoFirebaseMessages extends FirebaseContainer {
+class DaoFirebaseMessages {
 
-  static idCounter = 8;
+  static idCounter = 0;
 
   constructor() {
-    super("messages");
+    this.firebaseClient = new FirebaseContainer("messages")
   }
 
-  async save(item) {
-    item.id = DaoFirebaseMessages.idCounter;
-    const messageToAdd = this.query.doc(`${DaoFirebaseMessages.idCounter}`);
-    await messageToAdd.create(item)
+  async save(message) {
+    message.id = DaoFirebaseMessages.idCounter;
+    return await this.firebaseClient.save(message.id, message)
   }
 
   async getAll(){
-    let allMessages = [];
-    const snapshot = await this.query.get();
-    snapshot.forEach( doc => {
-      allMessages.push(doc.data());
-      if(DaoFirebaseMessages.idCounter <= doc.data().id){
-      DaoFirebaseMessages.idCounter= doc.data().id +1;
-      }
-    }
-    )
+    const allMessages = await this.firebaseClient.getAll()
+    allMessages.forEach( message => {
+      if (DaoFirebaseMessages.idCounter <= message.id){ DaoFirebaseMessages.idCounter = message.id +1} 
+    })
     return allMessages;
   }
 
