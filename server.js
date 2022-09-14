@@ -30,7 +30,6 @@ const app = express ();
 
 const { productRouter } = require ("./productsAndChat/productRouter");
 const { cartRouter } = require ("./carts/cartRouter");
-const { randomsRouter } = require("./randomNumbers/randoms");
 
 const multer = require("multer");
 /* const mimeTypes = require("mime-types") */
@@ -111,7 +110,6 @@ app.get("/logout", routes.getLogout)
 
 app.use("/api/productos", productRouter);
 app.use("/api/carrito", cartRouter);
-app.use("/api/randoms", randomsRouter);
 
 app.use((req, res) => {
     logger.warn(`Ruta: ${req.originalUrl} Método: ${req.method} No implementado`)
