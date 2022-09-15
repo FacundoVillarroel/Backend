@@ -29,30 +29,27 @@ productRouter.post("/", async ( req, res ) => {
     thumbnail:req.body.thumbnail,
     stock:req.body.stock
   }
-  if (productToAdd === undefined){res.status(400).send({error: "product no puede ser 'undefined'"})}
-  else {
-    const response = await service.postProduct(productToAdd)
-    res.send(response)
-  }
+  const response = await service.postProduct(productToAdd)
+  if (!response) {res.status(400).send("Faltan propiedades al producto")}
+  res.send(response)
+  
 
 })
 
 productRouter.put('/:idNumber', async ( req, res ) => {
-  
     const idProduct = parseInt(req.params.idNumber);
     const productUpdate = req.body;
-    if (productUpdate === undefined){res.status(400).send({error: "productUpdate no puede ser 'undefined'"})}
+    if (!Object.keys(productUpdate).length)res.status(400).send("Product to update no puede ser 'undefined'")
     else {
       const response = await service.putProduct(idProduct, productUpdate)
       res.send(response)
     }
-  
-
 })
 
 productRouter.delete('/:idNumber', async ( req, res ) => {
     const idProduct = parseInt(req.params.idNumber);
     const response = await service.deleteProduct(idProduct)
+    if (!response) res.status(400).send("No existe producto con ese id")
     res.send(response)
 })
 

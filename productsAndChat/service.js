@@ -33,6 +33,9 @@ class ProductService {
 
   async postProduct (productToAdd) {
     try{
+      for (let property in productToAdd){
+        if(!productToAdd[property]) return undefined;
+      }
       productToAdd.timeStamp = new Date();
       const newProduct = new Product(productToAdd)
       return (await this.products.save(newProduct))
@@ -52,6 +55,8 @@ async putProduct (id, productUpdate) {
 
 async deleteProduct (id) {
   try{
+    const product = await this.products.getById(id)
+    if (!product) return undefined
     const response = await this.products.deleteById(id)
     return(response)
   } catch {

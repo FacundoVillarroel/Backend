@@ -77,6 +77,32 @@ describe("API Rest Test", () => {
           expect(response.text).to.eq("El ID debe ser un numero")
         })
       })
+
+      describe('Post with empty product', () => { 
+        it("Should throw an error 400 'Faltan propiedades al producto'", async () => {
+          const response = await request.post("/api/productos")
+          expect(response.status).to.eq(400)
+          expect(response.text).to.eq("Faltan propiedades al producto")
+        })
+      })
+
+      describe('put with empty product', () => { 
+        it("Should throw an error 400 'Product to update no puede ser 'undefined''", async () => {
+          const response = await request.put("/api/productos/1")
+          expect(response.status).to.eq(400)
+          expect(response.text).to.eq("Product to update no puede ser 'undefined'")
+        })
+      })
+
+      describe("delete an non-existent product", () => {
+        it("Should return an error 400 'No existe producto con ese id", async () => {
+          const response = await request.delete("/api/productos/1000")
+          expect(response.status).to.eq(400)
+          expect(response.text).to.eq("No existe producto con ese id")
+        })
+      })
+
+
     })
   })
 })
