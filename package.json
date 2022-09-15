@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node test.js",
+    "test": "node performanceTest.js",
+    "test:server": "mocha ./test/server.test.js",
     "start0x": "0x server.js",
     "devStart": "nodemon"
   },
@@ -41,5 +42,12 @@
     "socket.io": "^4.5.1",
     "sqlite3": "^5.0.8",
     "twilio": "^3.81.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.3",
+    "assert": "^2.0.0",
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "supertest": "^6.2.4"
   }
 }

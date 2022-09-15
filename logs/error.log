@@ -7,3 +7,5 @@
 [2022-09-12T23:37:03.963] [ERROR] development - Error: TypeError: daoFactory.getById is not a function
 [2022-09-12T23:38:17.167] [ERROR] development - Error: ReferenceError: carts is not defined
 [2022-09-12T23:39:25.786] [ERROR] development - Error: TypeError: cart.data is not a function
+[2022-09-15T23:03:40.778] [ERROR] development - Error: TypeError: update.data is not a function
+[2022-09-15T23:13:02.758] [ERROR] development - Error: ReferenceError: update is not defined

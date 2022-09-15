@@ -30,7 +30,9 @@ class DaoFirebaseProducts {
   }
 
   async modifyProduct(id,productUpdate) {
-    return await this.firebaseClient.updateDoc(id,productUpdate)
+    await this.firebaseClient.updateDoc(id,productUpdate)
+    const modifiedProduct = await this.getById(id)
+    return modifiedProduct
   }
 
   async deleteById(id){

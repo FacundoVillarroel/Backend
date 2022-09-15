@@ -18,7 +18,7 @@ class FirebaseContainer {
     const itemToAdd = this.query.doc(`${id}`);
     await itemToAdd.create(item)
 
-    return `Agregado Correctamente, id: ${item.id}`
+    return item
   }
 
   async getAll() {
@@ -33,13 +33,14 @@ class FirebaseContainer {
 
   async updateDoc (id, updatedDoc){
     const currentDoc = await this.query.doc(`${id}`);
-    await currentDoc.update({...updatedDoc})
-    return ("Producto Modificado Correctamente")
+    const update = await currentDoc.update({...updatedDoc})
+    return (update)
   }
 
   async deleteById(id) {
     const docFound = await this.query.doc(`${id}`)
     await docFound.delete()
+    return "successfully deleted"
   }
 }
 module.exports = FirebaseContainer;

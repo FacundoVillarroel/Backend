@@ -132,3 +132,5 @@ if ( process.env.MODE == "cluster") {
     })
 }
 
+module.exports = app
+

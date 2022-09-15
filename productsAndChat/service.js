@@ -23,7 +23,7 @@ class ProductService {
         if (prodFound) {
           return prodFound
         } else {
-          return function(){throw new Error("No existe producto con ese ID")}
+          return undefined
         }
       }
     catch (err){
@@ -41,10 +41,10 @@ class ProductService {
     }
 }
 
-putProduct (id, productUpdate) {
+async putProduct (id, productUpdate) {
   try{
-    this.products.modifyProduct(id,productUpdate)
-      .then(promise => {return promise});
+    const response = await this.products.modifyProduct(id,productUpdate)
+    return response
   } catch (err){
     logger.error(`Error: ${err}`)
   }
@@ -52,8 +52,8 @@ putProduct (id, productUpdate) {
 
 async deleteProduct (id) {
   try{
-    this.products.deleteById(id)
-    .then(() => {return('Producto eliminado correctamente')})
+    const response = await this.products.deleteById(id)
+    return(response)
   } catch {
     logger.error(`Error: ${err}`)
   }
