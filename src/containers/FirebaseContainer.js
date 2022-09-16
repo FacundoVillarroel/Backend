@@ -39,7 +39,7 @@ class FirebaseContainer {
 
   async deleteById(id) {
     const docFound = await this.query.doc(`${id}`)
-    const response = await docFound.delete()
+    await docFound.delete()
     return "successfully deleted"
   }
 }

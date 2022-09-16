@@ -11,7 +11,7 @@ productRouter.get("/:id?", async (req, res) => {
   const id = parseInt(req.params.id);
   if (id){
     const prodFound = await service.getProduct(id)
-    if (prodFound == undefined) res.status(400).send("No existe producto con ese id")
+    if (prodFound == undefined) res.status(404).send("No existe producto con ese id")
     res.send(prodFound)
   }else {
     if (req.params.id) res.status(400).send("El ID debe ser un numero")

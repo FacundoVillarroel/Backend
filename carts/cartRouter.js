@@ -10,8 +10,17 @@ const service = new CartService(process.env.DATA_BASE_CARTS)
 
 cartRouter.get("/:id/productos", async ( req, res ) => {
   const id = parseInt(req.params.id);
-  const cart = await service.getById(id)
-  res.send(cart);
+  if (isNaN(id)) {
+    res.status(400).send("Should throw an error 'El ID debe ser un numero")
+  } else{
+    const cart = await service.getById(id)
+    if (Object.entries(cart).length === 0) {
+      res.status(404).send("No existe carrito con ese id")
+    } else {
+      res.send(cart)
+    }
+    
+  }
 })
 
 cartRouter.post("/", async ( req, res ) => {
@@ -40,15 +49,21 @@ cartRouter.post("/:id/productos", async ( req, res) => {
     stock:req.body.stock,
     timeStamp: req.body.timeStamp
   }
-  await service.addProductToCart(id, productToAdd)
-  res.send("Producto agregado al carrito")
+  const response = await service.addProductToCart(id, productToAdd)
+  res.send(response)
+})
+
+cartRouter.delete("/:id", async ( req, res ) => {
+  const id = parseInt(req.params.id)
+  await service.deleteById(id)
+  res.send("Carrito eliminado correctamente")
 })
 
 cartRouter.delete("/:id/productos/:id_prod", async ( req, res) => {
   const id = parseInt(req.params.id);
   const idProd = parseInt(req.params.id_prod);
   await service.deleteProductFromCart( id, idProd )
-  res.send("Producto eliminado correctamente")
+  res.send("Producto eliminado correctamente del carrito")
 }) 
 
 module.exports = { cartRouter, service }

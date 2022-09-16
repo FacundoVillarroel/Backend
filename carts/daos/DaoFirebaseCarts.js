@@ -30,7 +30,8 @@ class DaoFirebaseCarts {
   async addProductToCart (id, productToAdd){
     const data = await this.firebaseClient.getById(id);
     const newProductsList = [...data.products, productToAdd]
-    return await this.firebaseClient.updateDoc(id,{products: newProductsList})
+    await this.firebaseClient.updateDoc(id,{products: newProductsList})
+    return newProductsList
   }
 
   async deleteProductFromCart (id, idProd){

@@ -89,3 +89,11 @@
 [2022-09-16T00:18:46.882] [ERROR] development - Error: Error: Update() requires either a single JavaScript object or an alternating list of field/value pairs that can be followed by an optional precondition. At least one field must be updated.
 [2022-09-16T00:20:52.462] [ERROR] development - Error: Error: Update() requires either a single JavaScript object or an alternating list of field/value pairs that can be followed by an optional precondition. At least one field must be updated.
 [2022-09-16T00:22:24.304] [ERROR] development - Error: Error: Update() requires either a single JavaScript object or an alternating list of field/value pairs that can be followed by an optional precondition. At least one field must be updated.
+[2022-09-16T23:40:36.989] [WARN] development - Ruta: /api/carrito/1 Método: GET No implementado
+[2022-09-17T00:27:10.434] [WARN] development - Ruta: /api/carrrito/7/productos/3 Método: DELETE No implementado
+[2022-09-17T00:33:21.889] [ERROR] development - Error: TypeError: Cannot read properties of undefined (reading 'products')
+[2022-09-17T00:38:33.020] [ERROR] development - Error: TypeError: Cannot read properties of undefined (reading 'products')
+[2022-09-17T00:42:48.412] [ERROR] development - Error: Error: [object Object]
+[2022-09-17T00:43:10.922] [ERROR] development - Error: Error: No existe carrito con ese id
+[2022-09-17T00:44:35.102] [ERROR] development - Error: Error: No existe carrito con ese id
+[2022-09-17T00:44:42.596] [ERROR] development - Error: Error: No existe carrito con ese id
