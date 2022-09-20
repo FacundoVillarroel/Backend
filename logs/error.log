@@ -31,3 +31,8 @@
 [2022-09-17T00:43:10.922] [ERROR] development - Error: Error: No existe carrito con ese id
 [2022-09-17T00:44:35.102] [ERROR] development - Error: Error: No existe carrito con ese id
 [2022-09-17T00:44:42.596] [ERROR] development - Error: Error: No existe carrito con ese id
+[2022-09-20T23:33:43.520] [ERROR] production - Error: TypeError: productToAdd.hasOwnPropery is not a function
+[2022-09-20T23:34:24.484] [ERROR] production - Error: TypeError: productToAdd.hasOwnPropery is not a function
+[2022-09-20T23:36:06.397] [ERROR] production - Error: TypeError: productToAdd.hasOwnPropery is not a function
+[2022-09-20T23:40:35.662] [ERROR] production - Error: Error: Update() requires either a single JavaScript object or an alternating list of field/value pairs that can be followed by an optional precondition. Value for argument "dataOrField" is not a valid Firestore value. Cannot use "undefined" as a Firestore value (found in field "products.`1`.title"). If you want to ignore undefined values, enable `ignoreUndefinedProperties`.
+[2022-09-20T23:41:22.996] [ERROR] production - Error: Error: Update() requires either a single JavaScript object or an alternating list of field/value pairs that can be followed by an optional precondition. Value for argument "dataOrField" is not a valid Firestore value. Cannot use "undefined" as a Firestore value (found in field "products.`1`.title"). If you want to ignore undefined values, enable `ignoreUndefinedProperties`.

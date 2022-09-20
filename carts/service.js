@@ -39,6 +39,7 @@ class CartService {
 
   async addProductToCart(id, productToAdd){
     try{
+      if (!productToAdd) return undefined
       return await this.carts.addProductToCart( id, productToAdd)
     } catch (err){
       logger.error(`Error: ${err}`)

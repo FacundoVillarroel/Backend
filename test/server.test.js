@@ -174,6 +174,14 @@ describe("API Rest Test", () => {
           expect(response.text).to.eq("No existe carrito con ese id")
         })
       })
+
+      describe('Post an empty product to the cart', () => { 
+        it("Should response a 400 with the text 'El producto no puede ser undefined'", async () => {
+          const response = await request.post("/api/carrito/1/productos").send()
+          expect(response.status).to.eq(400)
+          expect(response.text).to.eq("El producto no puede ser undefined")
+        })
+      })
     })
   })
 })

@@ -50,7 +50,8 @@ cartRouter.post("/:id/productos", async ( req, res) => {
     timeStamp: req.body.timeStamp
   }
   const response = await service.addProductToCart(id, productToAdd)
-  res.send(response)
+  if (!response) { res.status(400).send("El producto no puede ser undefined")}
+  else {res.send(response)}
 })
 
 cartRouter.delete("/:id", async ( req, res ) => {
