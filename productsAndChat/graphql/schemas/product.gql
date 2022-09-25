@@ -9,8 +9,8 @@ type product {
   timeStamp: String
 }
 
-type Query{
-  getAll(): [product]
+type Query {
+  getAll: [product]
   getById(id:ID): product
 }
 

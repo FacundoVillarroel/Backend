@@ -83,6 +83,9 @@ app.set("view engine", "hbs");
 const httpServer = new HTTPServer (app);
 const io = new IOServer (httpServer);
 const ioFunction = require("./ioServer/io");
+const graphqlRouter = require("./productsAndChat/graphql/router/graphqlRouter");
+
+app.use(graphqlRouter)
 
 io.on("connection", async (socket) => {
     ioFunction(io, socket)
